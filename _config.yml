@@ -18,7 +18,7 @@ theme: next   #主题改为next
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://zouwenxiang.cn
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -103,7 +103,7 @@ ignore:
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/ashynesses/ashynesses.github.io.git
+  repo: git@github.com:ashynesses/ashynesses.github.io.git
   branch: main
 
 symbols_count_time:
