@@ -31,17 +31,15 @@ code {
 }
 
 // ============================================
-// Giscus 评论系统样式优化
+// Giscus 评论系统样式优化（与新设计的评论容器配合）
 // ============================================
 .giscus {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--card-bg-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  
+  // margin和padding已由.giscus-container控制
+  // 只设置iframe的基本样式
+
   .giscus-frame {
     border-radius: 8px;
+    border: none;
   }
 }
 
