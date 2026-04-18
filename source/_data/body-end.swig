@@ -20,73 +20,101 @@
   border-radius: 8px;
 }
 
-/* 评论按钮 - 固定在文章右下角 */
+/* 评论按钮 - 固定在文章右下角，突出显示 */
 .comment-toggle-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px 20px;
-  background: var(--btn-bg);
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
   position: fixed;
-  bottom: 40px;
-  right: 40px;
+  bottom: 50px;
+  right: 50px;
   z-index: 1000;
-  opacity: 0.95;
+  opacity: 0.98;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  min-width: 80px;
 }
 
 .comment-toggle-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  background: var(--btn-hover-bg);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
   opacity: 1;
 }
 
 .comment-toggle-btn:active {
-  transform: translateY(0);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
 }
 
 .comment-toggle-btn i {
-  margin-right: 6px;
-  font-size: 16px;
+  margin-right: 8px;
+  font-size: 18px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
 }
 
 .comment-toggle-btn .comment-count {
-  margin-left: 6px;
-  background: rgba(255,255,255,0.25);
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 600;
+  margin-left: 8px;
+  background: rgba(255,255,255,0.3);
+  padding: 3px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 /* 移动端适配 */
 @media (max-width: 767px) {
   .comment-toggle-btn {
-    bottom: 20px;
+    bottom: 30px;
     right: 20px;
-    padding: 8px 16px;
-    font-size: 14px;
+    padding: 10px 18px;
+    font-size: 15px;
+    border-radius: 10px;
+    min-width: 70px;
   }
 
   .comment-toggle-btn i {
-    margin-right: 4px;
-    font-size: 14px;
+    margin-right: 6px;
+    font-size: 16px;
+  }
+
+  .comment-toggle-btn .comment-count {
+    margin-left: 6px;
+    padding: 2px 8px;
+    font-size: 13px;
   }
 }
 
 /* 平板适配 */
 @media (min-width: 768px) and (max-width: 991px) {
   .comment-toggle-btn {
-    bottom: 30px;
+    bottom: 40px;
     right: 30px;
+  }
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .comment-toggle-btn {
+    background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+  }
+
+  .comment-toggle-btn:hover {
+    background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
+    box-shadow: 0 12px 30px rgba(138, 43, 226, 0.6);
   }
 }
 
@@ -150,6 +178,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const commentBtn = document.getElementById('commentToggleBtn');
+  const commentSection = document.querySelector('.comment-section');
   const giscusContainer = document.getElementById('giscusContainer');
   const giscusLoading = document.getElementById('giscusLoading');
   const btnText = commentBtn.querySelector('.btn-text');
@@ -158,6 +187,51 @@ document.addEventListener('DOMContentLoaded', function() {
   // 检查Giscus是否已加载
   let giscusLoaded = false;
   let commentObserver = null;
+
+  // 尝试将评论按钮移动到文章内容区域内部
+  function moveCommentButtonToPost() {
+    // 尝试找到文章内容容器
+    const postContainers = [
+      '.post-body',
+      '.post-content',
+      '.post-block',
+      '.post',
+      '.post-body-inner',
+      '.entry-content',
+      '.article-content'
+    ];
+
+    let postContainer = null;
+    for (const selector of postContainers) {
+      const element = document.querySelector(selector);
+      if (element) {
+        postContainer = element;
+        break;
+      }
+    }
+
+    // 如果找到文章容器，将整个评论区域移动到文章末尾
+    if (postContainer && commentSection) {
+      // 将评论按钮和容器移到文章容器内部
+      postContainer.appendChild(commentSection);
+
+      // 修改按钮定位为绝对定位，相对于文章容器
+      commentBtn.style.position = 'absolute';
+      commentBtn.style.bottom = '30px';
+      commentBtn.style.right = '30px';
+      commentBtn.style.zIndex = '100';
+
+      // 确保文章容器有相对定位
+      if (window.getComputedStyle(postContainer).position === 'static') {
+        postContainer.style.position = 'relative';
+      }
+
+      console.log('评论按钮已移动到文章容器内部');
+    } else {
+      // 如果没找到文章容器，保持原有fixed定位
+      console.log('未找到文章容器，评论按钮保持fixed定位');
+    }
+  }
 
   // 点击按钮切换评论显示
   commentBtn.addEventListener('click', function() {
@@ -267,6 +341,9 @@ document.addEventListener('DOMContentLoaded', function() {
       commentCount.style.display = 'none';
     }
   }
+
+  // 初始化：移动按钮到文章容器
+  setTimeout(moveCommentButtonToPost, 100);
 
   // 开始检查Giscus加载状态
   setTimeout(checkGiscusLoaded, 1000);
