@@ -20,28 +20,33 @@
   border-radius: 8px;
 }
 
-/* 评论按钮 */
+/* 评论按钮 - 固定在文章右下角 */
 .comment-toggle-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
-  margin: 2rem 0;
+  padding: 10px 20px;
   background: var(--btn-bg);
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 1000;
+  opacity: 0.95;
 }
 
 .comment-toggle-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
   background: var(--btn-hover-bg);
+  opacity: 1;
 }
 
 .comment-toggle-btn:active {
@@ -49,16 +54,40 @@
 }
 
 .comment-toggle-btn i {
-  margin-right: 8px;
-  font-size: 18px;
+  margin-right: 6px;
+  font-size: 16px;
 }
 
 .comment-toggle-btn .comment-count {
-  margin-left: 8px;
-  background: rgba(255,255,255,0.2);
+  margin-left: 6px;
+  background: rgba(255,255,255,0.25);
   padding: 2px 8px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* 移动端适配 */
+@media (max-width: 767px) {
+  .comment-toggle-btn {
+    bottom: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .comment-toggle-btn i {
+    margin-right: 4px;
+    font-size: 14px;
+  }
+}
+
+/* 平板适配 */
+@media (min-width: 768px) and (max-width: 991px) {
+  .comment-toggle-btn {
+    bottom: 30px;
+    right: 30px;
+  }
 }
 
 /* 加载状态 */
@@ -88,7 +117,7 @@
 <div class="comment-section">
   <button class="comment-toggle-btn" id="commentToggleBtn">
     <i class="fas fa-comments"></i>
-    <span class="btn-text">发表评论</span>
+    <span class="btn-text">评论</span>
     <span class="comment-count">0</span>
   </button>
 
@@ -136,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (giscusContainer.classList.contains('active')) {
       // 展开状态
-      btnText.textContent = '收起评论';
+      btnText.textContent = '收起';
       commentBtn.querySelector('i').className = 'fas fa-chevron-up';
 
       // 滚动到评论区域（平滑滚动）
@@ -148,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     } else {
       // 收起状态
-      btnText.textContent = '发表评论';
+      btnText.textContent = '评论';
       commentBtn.querySelector('i').className = 'fas fa-comments';
     }
   });
