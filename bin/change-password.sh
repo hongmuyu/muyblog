@@ -22,12 +22,15 @@ fi
 
 # 生成密码哈希
 echo "生成密码哈希..."
-PASSWORD_HASH=$(node -e "const bcrypt = require('bcryptjs'); console.log(bcrypt.hashSync('$NEW_PASSWORD', 10));")
+PASSWORD_HASH=$(node -e "const bcrypt = require('bcrypt-nodejs'); const salt = bcrypt.genSaltSync(10); console.log(bcrypt.hashSync('$NEW_PASSWORD', salt));")
 
 if [ $? -ne 0 ] || [ -z "$PASSWORD_HASH" ]; then
-    echo "❌ 哈希生成失败！请检查 bcryptjs 是否安装。"
+    echo "❌ 哈希生成失败！请检查 bcrypt-nodejs 是否安装。"
     exit 1
 fi
+
+# 转义哈希值中的 $ 符号，防止 shell 解释
+ESCAPED_HASH=$(echo "$PASSWORD_HASH" | sed 's/\$/\\\$/g')
 
 # 更新配置文件
 echo "更新配置文件..."
@@ -39,8 +42,8 @@ if [ ! -f "$CONFIG_FILE" ]; then
     exit 1
 fi
 
-# 查找并替换 password_hash
-sed "s|password_hash:.*|password_hash: $PASSWORD_HASH|" "$CONFIG_FILE" > "$TEMP_FILE"
+# 查找并替换 password_hash（使用转义后的哈希值，防止 $ 符号被 shell 解释）
+sed "s|password_hash:.*|password_hash: '$ESCAPED_HASH'|" "$CONFIG_FILE" > "$TEMP_FILE"
 
 if [ $? -ne 0 ]; then
     echo "❌ 配置文件更新失败！"

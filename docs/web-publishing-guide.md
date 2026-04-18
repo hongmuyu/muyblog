@@ -181,6 +181,28 @@ admin:
 ### 3. 自定义文章模板
 hexo-admin 会自动使用 `scaffolds/post.md` 作为新文章模板。
 
+### 4. 文章删除功能
+hexo-admin 内置了文章删除功能，您也可以在命令行使用删除脚本：
+
+```bash
+# 列出所有文章
+./bin/delete-post.sh --list
+
+# 交互式删除
+./bin/delete-post.sh --interactive
+
+# 通过文件名删除
+./bin/delete-post.sh "hello-world.md"
+
+# 通过标题删除（模糊匹配）
+./bin/delete-post.sh "Hello World"
+```
+
+删除文章后，需要重新部署才能从网站上移除：
+```bash
+./bin/deploy.sh
+```
+
 ## 故障排除
 
 ### 问题1：无法访问管理界面
