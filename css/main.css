@@ -1241,7 +1241,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffff4d;
+  background: #f8f;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2788,15 +2788,9 @@ code,
 pre {
   border: 1px solid #d6d6d6;
 }
-.giscus {
-  margin: 2rem 0;
-  padding: 1.5rem;
-  background: var(--card-bg-color);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
 .giscus .giscus-frame {
   border-radius: 8px;
+  border: none;
 }
 .local-search-popup {
   border-radius: 8px;
