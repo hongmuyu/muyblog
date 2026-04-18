@@ -125,3 +125,12 @@ search:
   limit: 100
   content: true  # 包含文章全文
   strip_html: true  # 去除HTML标签
+
+# hexo-admin 网页管理界面配置
+# 访问地址: http://localhost:4000/admin/
+# 密码生成命令: node -e "console.log(require('bcryptjs').hashSync(process.argv[1], 10))" your-password
+admin:
+  username: admin
+  password_hash: $2b$10$WpbK5l6vQ8cdqON4GKEb6uoGgUYD7IPtZZ6/8zyXxnLach2TLcd4q  # 默认密码: admin123
+  secret: a3f59c29799c2f3ac1950ac829ee7586ffb3d56c1765f1540246c5ddbedb6db8
+  deployCommand: './bin/deploy.sh'  # 使用我们的一键部署脚本
