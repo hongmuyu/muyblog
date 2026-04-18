@@ -172,7 +172,7 @@ site_state: true
 # Key is the link label showing to end users.
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
-  GitHub: https://github.com/ashynesses || github
+  GitHub: https://github.com/hongmuyu || github
   E-Mail: ashyness996@gamil.com || envelope
   知乎: https://www.zhihu.com/people/98-65-27-80 || gratipay
 
@@ -391,7 +391,7 @@ canvas_nest:
   opacity: 0.5 # The opacity of line: 0~1
   zIndex: -1 # z-index property of the background
   count: 99 # The number of lines
-  
+
 # ---------------------------------------------------------------
 # Font Settings
 # See: https://theme-next.org/docs/theme-settings/#Fonts-Customization
