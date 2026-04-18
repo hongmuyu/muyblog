@@ -103,7 +103,7 @@ ignore:
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: git@github.com:hongmuyu/ashynesses.github.io.git
+  repo: git@github.com:hongmuyu/muyblog.git
   branch: main
 
 symbols_count_time:
