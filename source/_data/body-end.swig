@@ -1,8 +1,8 @@
 <script src="https://giscus.app/client.js"
-        data-repo="[USERNAME]/[REPOSITORY]"
-        data-repo-id="[REPO_ID]"
-        data-category="[CATEGORY]"
-        data-category-id="[CATEGORY_ID]"
+        data-repo="hongmuyu/muyblog"
+        data-repo-id="R_kgDOSGJEzw"  <!-- 已配置：仓库ID -->
+        data-category="Announcements"
+        data-category-id="DIC_kwDOSGJEz84C7JYY"  <!-- 已配置：分类ID -->
         data-mapping="pathname"
         data-strict="0"
         data-reactions-enabled="1"
