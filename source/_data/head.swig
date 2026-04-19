@@ -4,8 +4,8 @@
 {# ============================================ #}
 
 {# 预加载关键资源 #}
-<link rel="preload" href="{{ url_for('css/main.css') }}" as="style">
-<link rel="preload" href="{{ url_for('js/main.js') }}" as="script">
+<link rel="preload" href="/css/main.css" as="style">
+<link rel="preload" href="/js/main.js" as="script">
 
 {# 预连接重要第三方域名 #}
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -30,8 +30,8 @@
 {# 如果需要进一步优化首屏渲染，可以考虑内联关键CSS #}
 
 {# 资源提示 #}
-<link rel="prefetch" href="{{ url_for('search.xml') }}" as="document">
-<link rel="prefetch" href="{{ url_for('js/local-search.js') }}" as="script">
+<link rel="prefetch" href="/search.xml" as="document">
+<link rel="prefetch" href="/js/local-search.js" as="script">
 
 {# 浏览器缓存控制 #}
 <meta http-equiv="Cache-Control" content="public, max-age=3600">
@@ -45,21 +45,8 @@
 {# 性能监控（可选） #}
 {# 可以添加Google Analytics或自定义性能监控脚本 #}
 
-{# 结构化数据（SEO） #}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "{{ config.title }}",
-  "description": "{{ config.description }}",
-  "url": "{{ config.url }}",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "{{ config.url }}/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
+{# 结构化数据（SEO）- 由 Hexo 生成器自动处理 #}
+{# 如果需要自定义结构化数据，请使用 Hexo 插件或主题配置 #}
 
 {# 移动端优化 #}
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
