@@ -20,138 +20,152 @@
   border-radius: 8px;
 }
 
-/* 评论按钮 - 固定在文章右下角，突出显示 */
-.comment-toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+/* 右侧悬浮按钮容器 */
+.sidebar-actions {
   position: fixed;
-  bottom: 50px;
-  right: 50px;
+  right: 30px;
+  bottom: 120px;
   z-index: 1000;
-  opacity: 0.98;
-  letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* 相对定位的评论按钮 - 用于文章内部 */
-.comment-toggle-btn.relative {
+/* 评论按钮 - 固定在右侧的圆形样式 */
+.comment-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background: #fff;
+  color: #666;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
   position: relative;
-  bottom: auto;
-  right: auto;
-  z-index: auto;
-  margin-left: auto;
-  margin-right: 0;
-  display: block;
-  width: fit-content;
 }
 
 .comment-toggle-btn:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-  opacity: 1;
+  background: #f5f5f5;
+  color: #333;
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .comment-toggle-btn:active {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+  transform: translateY(-1px) scale(1.05);
 }
 
 .comment-toggle-btn i {
-  margin-right: 8px;
-  font-size: 18px;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  font-size: 20px;
 }
 
+/* 评论数量角标 */
 .comment-toggle-btn .comment-count {
-  margin-left: 8px;
-  background: rgba(255,255,255,0.3);
-  padding: 3px 10px;
-  border-radius: 15px;
-  font-size: 14px;
-  font-weight: 700;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255,255,255,0.2);
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #ff4757;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(255,71,87,0.3);
+}
+
+.comment-toggle-btn .comment-count:empty,
+.comment-toggle-btn .comment-count[style*="display: none"] {
+  display: none !important;
+}
+
+/* 隐藏按钮文字，只显示图标 */
+.comment-toggle-btn .btn-text {
+  display: none;
 }
 
 /* 移动端适配 */
 @media (max-width: 767px) {
-  .comment-toggle-btn {
-    bottom: 30px;
-    right: 20px;
-    padding: 10px 18px;
-    font-size: 15px;
-    border-radius: 10px;
-    min-width: 70px;
+  .sidebar-actions {
+    right: 15px;
+    bottom: 95px;
+    gap: 10px;
   }
 
-  /* 相对定位按钮在移动端的样式 */
-  .comment-toggle-btn.relative {
-    bottom: auto;
-    right: auto;
-    margin-top: 0.8rem;
-    padding: 8px 16px;
-    font-size: 14px;
+  .comment-toggle-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
   }
 
   .comment-toggle-btn i {
-    margin-right: 6px;
-    font-size: 16px;
+    font-size: 18px;
   }
 
   .comment-toggle-btn .comment-count {
-    margin-left: 6px;
-    padding: 2px 8px;
-    font-size: 13px;
+    font-size: 10px;
+    min-width: 16px;
+    height: 16px;
+    padding: 1px 4px;
+  }
+
+  /* 移动端按钮位置调整 */
+  .back-to-top {
+    width: 44px;
+    height: 44px;
+    right: 15px;
+    bottom: 25px;
+    font-size: 18px;
+  }
+
+  .dark-mode-toggle {
+    width: 44px;
+    height: 44px;
+    right: 15px;
+    bottom: 60px;
+    font-size: 18px;
   }
 }
 
 /* 平板适配 */
 @media (min-width: 768px) and (max-width: 991px) {
-  .comment-toggle-btn {
-    bottom: 40px;
-    right: 30px;
+  .sidebar-actions {
+    right: 20px;
+    bottom: 105px;
   }
 
-  /* 相对定位按钮在平板端的样式 */
-  .comment-toggle-btn.relative {
-    bottom: auto;
-    right: auto;
+  .dark-mode-toggle {
+    bottom: 70px;
+    right: 20px;
+  }
+
+  .back-to-top {
+    right: 20px;
+    bottom: 25px;
   }
 }
 
-/* 暗色模式适配 */
-@media (prefers-color-scheme: dark) {
-  .comment-toggle-btn {
-    background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
-    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
-  }
 
-  .comment-toggle-btn:hover {
-    background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
-    box-shadow: 0 12px 30px rgba(138, 43, 226, 0.6);
-  }
+/* 手动暗色模式适配 */
+[data-theme="dark"] .comment-toggle-btn {
+  background: #2d2d2d;
+  color: #aaa;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
 
-  /* 相对定位按钮在暗色模式下的样式 */
-  .comment-toggle-btn.relative {
-    background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
-  }
-
-  .comment-toggle-btn.relative:hover {
-    background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
-  }
+[data-theme="dark"] .comment-toggle-btn:hover {
+  background: #3a3a3a;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
 /* 加载状态 */
@@ -177,14 +191,16 @@
 }
 </style>
 
-<!-- 评论按钮和容器 -->
-<div class="comment-section">
-  <button class="comment-toggle-btn" id="commentToggleBtn">
-    <i class="fas fa-comments"></i>
-    <span class="btn-text">评论</span>
-    <span class="comment-count">0</span>
+<!-- 右侧悬浮操作按钮 -->
+<div class="sidebar-actions" id="sidebarActions">
+  <button class="comment-toggle-btn" id="commentToggleBtn" title="发表评论">
+    <i class="fas fa-comment"></i>
+    <span class="comment-count"></span>
   </button>
+</div>
 
+<!-- 评论容器（放在文章末尾） -->
+<div class="comment-section" id="commentSection" style="display: none;">
   <div class="giscus-container" id="giscusContainer">
     <div class="giscus-loading" id="giscusLoading">
       <div class="spinner"></div>
@@ -214,82 +230,65 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const commentBtn = document.getElementById('commentToggleBtn');
-  const commentSection = document.querySelector('.comment-section');
+  const commentSection = document.getElementById('commentSection');
+  const sidebarActions = document.getElementById('sidebarActions');
   const giscusContainer = document.getElementById('giscusContainer');
   const giscusLoading = document.getElementById('giscusLoading');
-  const btnText = commentBtn.querySelector('.btn-text');
   const commentCount = commentBtn.querySelector('.comment-count');
 
   // 检查Giscus是否已加载
   let giscusLoaded = false;
   let commentObserver = null;
+  let isCommentVisible = false;
 
-  // 将评论按钮移动到版权声明正下方
-  function moveCommentButtonToCopyright() {
-    // 首先检查是否是博客文章页面
-    const isBlogPost = document.querySelector('.post, .post-block, .article, [itemtype="http://schema.org/Article"]');
+  // 检查是否是博客文章页面
+  function isBlogPostPage() {
+    return document.querySelector('.post, .post-block, .article, [itemtype="http://schema.org/Article"]') !== null;
+  }
 
-    if (!isBlogPost) {
-      // 如果不是博客文章页面，隐藏整个评论区域
-      commentSection.style.display = 'none';
-      console.log('非博客文章页面，隐藏评论区域');
-      return;
+  // 如果不是文章页面，隐藏评论按钮
+  if (!isBlogPostPage()) {
+    sidebarActions.style.display = 'none';
+    console.log('非博客文章页面，隐藏评论按钮');
+    return;
+  }
+
+  // 将评论容器移动到文章末尾
+  function moveCommentContainer() {
+    // 查找文章主体或页面主体
+    const postBody = document.querySelector('.post-body, .post-content, .article-content, main .content');
+    const postBlock = document.querySelector('.post-block, .post, article');
+
+    if (postBody && postBody.parentNode) {
+      // 插入到文章主体之后
+      postBody.parentNode.insertBefore(commentSection, postBody.nextSibling);
+      commentSection.style.display = 'block';
+      console.log('评论容器已插入到文章主体之后');
+    } else if (postBlock && postBlock.parentNode) {
+      // 备用：插入到文章块之后
+      postBlock.parentNode.insertBefore(commentSection, postBlock.nextSibling);
+      commentSection.style.display = 'block';
+      console.log('评论容器已插入到文章块之后');
+    } else {
+      // 如果找不到合适位置，显示在原位置
+      commentSection.style.display = 'block';
+      console.log('使用默认位置显示评论容器');
     }
-
-    // 查找版权声明元素
-    const copyrightElement = document.querySelector('.post-copyright');
-
-    if (!copyrightElement) {
-      console.log('未找到版权声明元素，保持原有fixed定位');
-      return;
-    }
-
-    // 找到版权声明所在的容器
-    const copyrightContainer = copyrightElement.closest('div') || copyrightElement.parentNode;
-
-    if (!copyrightContainer || !copyrightContainer.parentNode) {
-      console.log('未找到版权声明容器，保持原有fixed定位');
-      return;
-    }
-
-    // 创建评论区域容器，使用我们在styles.styl中定义的样式
-    const commentContainer = document.createElement('div');
-    commentContainer.className = 'comment-section-container';
-
-    // 创建按钮包装器，用于右对齐
-    const buttonWrapper = document.createElement('div');
-    buttonWrapper.className = 'comment-toggle-btn-wrapper';
-
-    // 修改评论按钮样式：从fixed定位改为相对定位
-    commentBtn.classList.add('relative');
-
-    // 将按钮放入包装器
-    buttonWrapper.appendChild(commentBtn);
-
-    // 将按钮包装器和评论容器放入评论区域容器
-    commentContainer.appendChild(buttonWrapper);
-    commentContainer.appendChild(giscusContainer);
-
-    // 将评论区域容器插入到版权声明后面
-    copyrightContainer.parentNode.insertBefore(commentContainer, copyrightElement.nextSibling);
-
-    // 隐藏原始的评论区域，因为我们已经移动了内容
-    commentSection.style.display = 'none';
-
-    console.log('评论按钮已移动到版权声明正下方，使用优化容器结构');
   }
 
   // 点击按钮切换评论显示
   commentBtn.addEventListener('click', function() {
-    giscusContainer.classList.toggle('active');
+    isCommentVisible = !isCommentVisible;
 
-    if (giscusContainer.classList.contains('active')) {
+    if (isCommentVisible) {
       // 展开状态
-      btnText.textContent = '收起';
-      commentBtn.querySelector('i').className = 'fas fa-chevron-up';
+      giscusContainer.classList.add('active');
+      commentBtn.innerHTML = '<i class="fas fa-chevron-down"></i><span class="comment-count">' + (commentCount.textContent || '') + '</span>';
 
       // 滚动到评论区域（平滑滚动）
-      giscusContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      setTimeout(() => {
+        giscusContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
 
       // 如果Giscus已加载，更新评论计数
       if (giscusLoaded) {
@@ -297,8 +296,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     } else {
       // 收起状态
-      btnText.textContent = '评论';
-      commentBtn.querySelector('i').className = 'fas fa-comments';
+      giscusContainer.classList.remove('active');
+      commentBtn.innerHTML = '<i class="fas fa-comment"></i><span class="comment-count">' + (commentCount.textContent || '') + '</span>';
     }
   });
 
@@ -388,8 +387,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // 初始化：移动按钮到版权声明下方
-  setTimeout(moveCommentButtonToCopyright, 100);
+  // 初始化：移动评论容器到文章末尾
+  setTimeout(moveCommentContainer, 100);
 
   // 开始检查Giscus加载状态
   setTimeout(checkGiscusLoaded, 1000);
@@ -856,15 +855,17 @@ document.addEventListener('mouseover', function(e) {
 }, { passive: true });
 </script>
 
-{# 返回顶部按钮 #}
-<button class="back-to-top" id="backToTop" aria-label="返回顶部">
+{# 返回顶部按钮 - 如果 NexT 已提供则隐藏此自定义按钮 #}
+{%- if not theme.back2top.enable %}
+<button class="back-to-top" id="backToTopCustom" aria-label="返回顶部">
   <i class="fas fa-arrow-up"></i>
 </button>
+{%- endif %}
 
 <script>
 // 返回顶部按钮功能
 document.addEventListener('DOMContentLoaded', function() {
-  const backToTopBtn = document.getElementById('backToTop');
+  const backToTopBtn = document.getElementById('backToTopCustom') || document.getElementById('backToTop');
   if (!backToTopBtn) return;
 
   // 显示/隐藏按钮
@@ -1113,7 +1114,7 @@ document.addEventListener('DOMContentLoaded', function() {
   transition: width 0.1s ease;
 }
 
-/* 返回顶部按钮样式补充 */
+/* 返回顶部按钮样式补充 - 与评论按钮统一 */
 .back-to-top {
   position: fixed;
   bottom: 30px;
@@ -1121,8 +1122,8 @@ document.addEventListener('DOMContentLoaded', function() {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(102, 126, 234, 0.9);
-  color: white;
+  background: #fff;
+  color: #666;
   border: none;
   cursor: pointer;
   opacity: 0;
@@ -1132,8 +1133,8 @@ document.addEventListener('DOMContentLoaded', function() {
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  z-index: 999;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
 }
 
 .back-to-top.visible {
@@ -1142,43 +1143,99 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 .back-to-top:hover {
-  background: #667eea;
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: #f5f5f5;
+  color: #333;
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-/* 夜间模式切换按钮样式补充 */
+.back-to-top:active {
+  transform: translateY(-1px) scale(1.05);
+}
+
+/* 暗色模式适配 - 返回顶部按钮 */
+@media (prefers-color-scheme: dark) {
+  .back-to-top {
+    background: #2d2d2d;
+    color: #aaa;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+
+  .back-to-top:hover {
+    background: #3a3a3a;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  }
+}
+
+[data-theme="dark"] .back-to-top {
+  background: #2d2d2d;
+  color: #aaa;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .back-to-top:hover {
+  background: #3a3a3a;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* 夜间模式切换按钮样式补充 - 移入右侧按钮组 */
 .dark-mode-toggle {
   position: fixed;
-  bottom: 90px;
+  bottom: 75px;
   right: 30px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.1);
-  color: #333;
+  background: #fff;
+  color: #666;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  z-index: 999;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
   transition: all 0.3s ease;
 }
 
 .dark-mode-toggle:hover {
-  background: rgba(0, 0, 0, 0.15);
-  transform: translateY(-3px);
+  background: #f5f5f5;
+  color: #333;
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.dark-mode-toggle:active {
+  transform: translateY(-1px) scale(1.05);
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-toggle {
+    background: #2d2d2d;
+    color: #aaa;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+
+  .dark-mode-toggle:hover {
+    background: #3a3a3a;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  }
 }
 
 [data-theme="dark"] .dark-mode-toggle {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ddd;
+  background: #2d2d2d;
+  color: #aaa;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
 [data-theme="dark"] .dark-mode-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: #3a3a3a;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 </style>

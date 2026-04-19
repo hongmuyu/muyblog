@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "lastUpdated": 1776565361709,
+  "plugins": [
+    {
+      "filename": "ntfy-notify",
+      "type": "skill",
+      "metadata": {
+        "sourcePath": "skills/ntfy-notify",
+        "filename": "ntfy-notify",
+        "name": "ntfy-notify",
+        "description": "Send push notifications via ntfy.sh. Use this skill when the user asks to be notified, wants an alert, or when a long-running task completes and the user should be informed.",
+        "category": "skills",
+        "type": "skill",
+        "size": 2721,
+        "contentHash": "bdee1f127c04afbb1ca2d0385b5b03cb08b4c6af55eb33d8064d6c20cbb33de4",
+        "installedAt": 1776565361705,
+        "updatedAt": 1776565361705
+      }
+    }
+  ]
+}
