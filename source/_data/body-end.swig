@@ -20,13 +20,13 @@
   border-radius: 8px;
 }
 
-/* 右侧悬浮按钮容器 */
+/* 右侧悬浮按钮容器 - 只在文章页面显示 */
 .sidebar-actions {
   position: fixed;
   right: 30px;
-  bottom: 120px;
+  bottom: 90px;
   z-index: 1000;
-  display: flex;
+  display: none; /* 默认隐藏，通过JS在文章页面显示 */
   flex-direction: column;
   gap: 12px;
 }
@@ -97,7 +97,7 @@
 @media (max-width: 767px) {
   .sidebar-actions {
     right: 15px;
-    bottom: 95px;
+    bottom: 75px;
     gap: 10px;
   }
 
@@ -126,26 +126,13 @@
     bottom: 25px;
     font-size: 18px;
   }
-
-  .dark-mode-toggle {
-    width: 44px;
-    height: 44px;
-    right: 15px;
-    bottom: 60px;
-    font-size: 18px;
-  }
 }
 
 /* 平板适配 */
 @media (min-width: 768px) and (max-width: 991px) {
   .sidebar-actions {
     right: 20px;
-    bottom: 105px;
-  }
-
-  .dark-mode-toggle {
-    bottom: 70px;
-    right: 20px;
+    bottom: 85px;
   }
 
   .back-to-top {
@@ -241,9 +228,19 @@ document.addEventListener('DOMContentLoaded', function() {
   let commentObserver = null;
   let isCommentVisible = false;
 
-  // 检查是否是博客文章页面
+  // 检查是否是博客文章页面（通过URL路径和页面元素双重判断）
   function isBlogPostPage() {
-    return document.querySelector('.post, .post-block, .article, [itemtype="http://schema.org/Article"]') !== null;
+    const pathname = window.location.pathname;
+    // 检查URL路径是否符合文章格式：/年/月/日/标题/ 或 /年/月/日/标题.html
+    const isArticlePath = /^\/\d{4}\/\d{2}\/\d{2}\/[^\/]+/.test(pathname);
+
+    // 同时检查页面是否有文章特有的元素
+    const hasArticleElement = document.querySelector('.post, .post-block, article.post, [itemtype="http://schema.org/Article"]') !== null;
+
+    // 排除归档、标签、分类等页面
+    const isSpecialPage = /\/(archives|tags|categories|about|resources|search)(\/|$)/.test(pathname);
+
+    return isArticlePath && hasArticleElement && !isSpecialPage;
   }
 
   // 如果不是文章页面，隐藏评论按钮
@@ -252,6 +249,10 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('非博客文章页面，隐藏评论按钮');
     return;
   }
+
+  // 是文章页面，显示评论按钮
+  sidebarActions.style.display = 'flex';
+  console.log('博客文章页面，显示评论按钮');
 
   // 将评论容器移动到文章末尾
   function moveCommentContainer() {
@@ -982,69 +983,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-{# 夜间模式切换 #}
-<button class="dark-mode-toggle" id="darkModeToggle" aria-label="切换夜间模式">
-  <i class="fas fa-moon" id="darkModeIcon"></i>
-</button>
-
-<script>
-// 夜间模式切换
-document.addEventListener('DOMContentLoaded', function() {
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  const darkModeIcon = document.getElementById('darkModeIcon');
-  const THEME_KEY = 'hexo_theme';
-  const DARK_THEME = 'dark';
-  const LIGHT_THEME = 'light';
-
-  if (!darkModeToggle || !darkModeIcon) return;
-
-  // 获取当前主题
-  function getCurrentTheme() {
-    const savedTheme = localStorage.getItem(THEME_KEY);
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    return savedTheme || (systemPrefersDark ? DARK_THEME : LIGHT_THEME);
-  }
-
-  // 应用主题
-  function applyTheme(theme) {
-    const html = document.documentElement;
-
-    if (theme === DARK_THEME) {
-      html.setAttribute('data-theme', DARK_THEME);
-      darkModeIcon.className = 'fas fa-sun';
-      darkModeToggle.title = '切换日间模式';
-    } else {
-      html.removeAttribute('data-theme');
-      darkModeIcon.className = 'fas fa-moon';
-      darkModeToggle.title = '切换夜间模式';
-    }
-
-    localStorage.setItem(THEME_KEY, theme);
-  }
-
-  // 切换主题
-  function toggleTheme() {
-    const currentTheme = getCurrentTheme();
-    const newTheme = currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
-    applyTheme(newTheme);
-  }
-
-  // 初始化主题
-  applyTheme(getCurrentTheme());
-
-  // 监听系统主题变化
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-    if (!localStorage.getItem(THEME_KEY)) {
-      applyTheme(e.matches ? DARK_THEME : LIGHT_THEME);
-    }
-  });
-
-  // 绑定点击事件
-  darkModeToggle.addEventListener('click', toggleTheme);
-});
-</script>
-
 {# 图片懒加载增强 #}
 <script>
 // 图片懒加载增强（补充head.swig中的功能）
@@ -1180,62 +1118,4 @@ document.addEventListener('DOMContentLoaded', function() {
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
-/* 夜间模式切换按钮样式补充 - 移入右侧按钮组 */
-.dark-mode-toggle {
-  position: fixed;
-  bottom: 75px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #fff;
-  color: #666;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  z-index: 1000;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
-  transition: all 0.3s ease;
-}
-
-.dark-mode-toggle:hover {
-  background: #f5f5f5;
-  color: #333;
-  transform: translateY(-3px) scale(1.1);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
-
-.dark-mode-toggle:active {
-  transform: translateY(-1px) scale(1.05);
-}
-
-/* 暗色模式适配 */
-@media (prefers-color-scheme: dark) {
-  .dark-mode-toggle {
-    background: #2d2d2d;
-    color: #aaa;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  }
-
-  .dark-mode-toggle:hover {
-    background: #3a3a3a;
-    color: #fff;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  }
-}
-
-[data-theme="dark"] .dark-mode-toggle {
-  background: #2d2d2d;
-  color: #aaa;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-[data-theme="dark"] .dark-mode-toggle:hover {
-  background: #3a3a3a;
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
 </style>
