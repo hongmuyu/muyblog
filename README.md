@@ -65,10 +65,8 @@ Blog/
 │   │   ├── head.swig          # 头部扩展
 │   │   └── styles.styl        # 自定义样式
 │   ├── images/                 # 全局图片资源
-│   ├── about/                  # 关于页面
 │   ├── tags/                   # 标签页面
-│   ├── categories/             # 分类页面
-│   └── resources/              # 资源页面
+│   └── categories/             # 分类页面
 ├── themes/                     # 主题目录
 │   └── next/                   # NexT 主题
 ├── bin/                        # 自定义脚本
