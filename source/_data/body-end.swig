@@ -45,6 +45,18 @@
   min-width: 80px;
 }
 
+/* 相对定位的评论按钮 - 用于文章内部 */
+.comment-toggle-btn.relative {
+  position: relative;
+  bottom: auto;
+  right: auto;
+  z-index: auto;
+  margin-left: auto;
+  margin-right: 0;
+  display: block;
+  width: fit-content;
+}
+
 .comment-toggle-btn:hover {
   transform: translateY(-5px) scale(1.05);
   box-shadow: 0 12px 30px rgba(102, 126, 234, 0.6);
@@ -85,6 +97,15 @@
     min-width: 70px;
   }
 
+  /* 相对定位按钮在移动端的样式 */
+  .comment-toggle-btn.relative {
+    bottom: auto;
+    right: auto;
+    margin-top: 0.8rem;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
   .comment-toggle-btn i {
     margin-right: 6px;
     font-size: 16px;
@@ -103,6 +124,12 @@
     bottom: 40px;
     right: 30px;
   }
+
+  /* 相对定位按钮在平板端的样式 */
+  .comment-toggle-btn.relative {
+    bottom: auto;
+    right: auto;
+  }
 }
 
 /* 暗色模式适配 */
@@ -115,6 +142,15 @@
   .comment-toggle-btn:hover {
     background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
     box-shadow: 0 12px 30px rgba(138, 43, 226, 0.6);
+  }
+
+  /* 相对定位按钮在暗色模式下的样式 */
+  .comment-toggle-btn.relative {
+    background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+  }
+
+  .comment-toggle-btn.relative:hover {
+    background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
   }
 }
 
@@ -188,49 +224,59 @@ document.addEventListener('DOMContentLoaded', function() {
   let giscusLoaded = false;
   let commentObserver = null;
 
-  // 尝试将评论按钮移动到文章内容区域内部
-  function moveCommentButtonToPost() {
-    // 尝试找到文章内容容器
-    const postContainers = [
-      '.post-body',
-      '.post-content',
-      '.post-block',
-      '.post',
-      '.post-body-inner',
-      '.entry-content',
-      '.article-content'
-    ];
+  // 将评论按钮移动到版权声明正下方
+  function moveCommentButtonToCopyright() {
+    // 首先检查是否是博客文章页面
+    const isBlogPost = document.querySelector('.post, .post-block, .article, [itemtype="http://schema.org/Article"]');
 
-    let postContainer = null;
-    for (const selector of postContainers) {
-      const element = document.querySelector(selector);
-      if (element) {
-        postContainer = element;
-        break;
-      }
+    if (!isBlogPost) {
+      // 如果不是博客文章页面，隐藏整个评论区域
+      commentSection.style.display = 'none';
+      console.log('非博客文章页面，隐藏评论区域');
+      return;
     }
 
-    // 如果找到文章容器，将整个评论区域移动到文章末尾
-    if (postContainer && commentSection) {
-      // 将评论按钮和容器移到文章容器内部
-      postContainer.appendChild(commentSection);
+    // 查找版权声明元素
+    const copyrightElement = document.querySelector('.post-copyright');
 
-      // 修改按钮定位为绝对定位，相对于文章容器
-      commentBtn.style.position = 'absolute';
-      commentBtn.style.bottom = '30px';
-      commentBtn.style.right = '30px';
-      commentBtn.style.zIndex = '100';
-
-      // 确保文章容器有相对定位
-      if (window.getComputedStyle(postContainer).position === 'static') {
-        postContainer.style.position = 'relative';
-      }
-
-      console.log('评论按钮已移动到文章容器内部');
-    } else {
-      // 如果没找到文章容器，保持原有fixed定位
-      console.log('未找到文章容器，评论按钮保持fixed定位');
+    if (!copyrightElement) {
+      console.log('未找到版权声明元素，保持原有fixed定位');
+      return;
     }
+
+    // 找到版权声明所在的容器
+    const copyrightContainer = copyrightElement.closest('div') || copyrightElement.parentNode;
+
+    if (!copyrightContainer || !copyrightContainer.parentNode) {
+      console.log('未找到版权声明容器，保持原有fixed定位');
+      return;
+    }
+
+    // 创建评论区域容器，使用我们在styles.styl中定义的样式
+    const commentContainer = document.createElement('div');
+    commentContainer.className = 'comment-section-container';
+
+    // 创建按钮包装器，用于右对齐
+    const buttonWrapper = document.createElement('div');
+    buttonWrapper.className = 'comment-toggle-btn-wrapper';
+
+    // 修改评论按钮样式：从fixed定位改为相对定位
+    commentBtn.classList.add('relative');
+
+    // 将按钮放入包装器
+    buttonWrapper.appendChild(commentBtn);
+
+    // 将按钮包装器和评论容器放入评论区域容器
+    commentContainer.appendChild(buttonWrapper);
+    commentContainer.appendChild(giscusContainer);
+
+    // 将评论区域容器插入到版权声明后面
+    copyrightContainer.parentNode.insertBefore(commentContainer, copyrightElement.nextSibling);
+
+    // 隐藏原始的评论区域，因为我们已经移动了内容
+    commentSection.style.display = 'none';
+
+    console.log('评论按钮已移动到版权声明正下方，使用优化容器结构');
   }
 
   // 点击按钮切换评论显示
@@ -342,8 +388,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // 初始化：移动按钮到文章容器
-  setTimeout(moveCommentButtonToPost, 100);
+  // 初始化：移动按钮到版权声明下方
+  setTimeout(moveCommentButtonToCopyright, 100);
 
   // 开始检查Giscus加载状态
   setTimeout(checkGiscusLoaded, 1000);
@@ -391,6 +437,382 @@ document.addEventListener('keydown', function(e) {
 });
 </script>
 
+{# 搜索体验优化 #}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 等待搜索框加载
+  setTimeout(function() {
+    const searchInput = document.querySelector('.search-input');
+    const searchPopup = document.querySelector('.search-popup');
+
+    if (!searchInput || !searchPopup) return;
+
+    // 1. 搜索历史功能
+    const HISTORY_KEY = 'hexo_search_history';
+    const MAX_HISTORY = 10;
+
+    // 获取搜索历史
+    function getSearchHistory() {
+      try {
+        const history = localStorage.getItem(HISTORY_KEY);
+        return history ? JSON.parse(history) : [];
+      } catch (e) {
+        console.error('读取搜索历史失败:', e);
+        return [];
+      }
+    }
+
+    // 保存搜索历史
+    function saveSearchHistory(query) {
+      if (!query.trim()) return;
+
+      try {
+        let history = getSearchHistory();
+
+        // 移除重复项
+        history = history.filter(item => item !== query);
+
+        // 添加到开头
+        history.unshift(query);
+
+        // 限制数量
+        if (history.length > MAX_HISTORY) {
+          history = history.slice(0, MAX_HISTORY);
+        }
+
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      } catch (e) {
+        console.error('保存搜索历史失败:', e);
+      }
+    }
+
+    // 显示搜索历史
+    function showSearchHistory() {
+      const history = getSearchHistory();
+      if (history.length === 0) return;
+
+      // 创建历史容器
+      let historyContainer = document.querySelector('.search-history');
+      if (!historyContainer) {
+        historyContainer = document.createElement('div');
+        historyContainer.className = 'search-history';
+        historyContainer.innerHTML = '<div class="search-history-header">最近搜索</div>';
+
+        // 插入到搜索输入框后面
+        const inputContainer = searchInput.closest('.search-input-container');
+        if (inputContainer) {
+          inputContainer.parentNode.insertBefore(historyContainer, inputContainer.nextSibling);
+        }
+      }
+
+      // 更新历史列表
+      const historyList = historyContainer.querySelector('.search-history-list') ||
+                          document.createElement('div');
+      historyList.className = 'search-history-list';
+
+      historyList.innerHTML = history.map(item => `
+        <div class="search-history-item" data-query="${item}">
+          <span class="search-history-text">${item}</span>
+          <button class="search-history-remove" title="删除">×</button>
+        </div>
+      `).join('');
+
+      if (!historyContainer.querySelector('.search-history-list')) {
+        historyContainer.appendChild(historyList);
+      }
+
+      // 添加点击事件
+      historyList.querySelectorAll('.search-history-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          if (!e.target.classList.contains('search-history-remove')) {
+            const query = this.dataset.query;
+            searchInput.value = query;
+            searchInput.focus();
+
+            // 触发搜索
+            const event = new Event('input', { bubbles: true });
+            searchInput.dispatchEvent(event);
+          }
+        });
+
+        const removeBtn = item.querySelector('.search-history-remove');
+        if (removeBtn) {
+          removeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const query = item.dataset.query;
+            removeFromHistory(query);
+            item.remove();
+          });
+        }
+      });
+    }
+
+    // 从历史中移除
+    function removeFromHistory(query) {
+      try {
+        let history = getSearchHistory();
+        history = history.filter(item => item !== query);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+      } catch (e) {
+        console.error('删除搜索历史失败:', e);
+      }
+    }
+
+    // 2. 搜索建议（基于标题）
+    function showSearchSuggestions(query) {
+      if (!query.trim()) return;
+
+      // 获取所有文章标题（从搜索结果中）
+      const resultItems = document.querySelectorAll('.search-result-item');
+      const titles = Array.from(resultItems).map(item => {
+        const titleEl = item.querySelector('.search-result-title');
+        return titleEl ? titleEl.textContent : '';
+      }).filter(title => title.toLowerCase().includes(query.toLowerCase()));
+
+      // 显示建议（简单实现）
+      if (titles.length > 0) {
+        // 可以在这里实现更复杂的建议逻辑
+      }
+    }
+
+    // 3. 搜索结果高亮优化
+    function highlightSearchResults() {
+      const results = document.querySelectorAll('.search-result-list li');
+      results.forEach((result, index) => {
+        // 添加交替行背景色
+        if (index % 2 === 0) {
+          result.style.backgroundColor = 'rgba(0,0,0,0.02)';
+        }
+
+        // 添加悬停效果
+        result.addEventListener('mouseenter', function() {
+          this.style.backgroundColor = 'rgba(102, 126, 234, 0.08)';
+        });
+
+        result.addEventListener('mouseleave', function() {
+          this.style.backgroundColor = index % 2 === 0 ? 'rgba(0,0,0,0.02)' : 'transparent';
+        });
+      });
+    }
+
+    // 监听搜索输入
+    searchInput.addEventListener('input', function() {
+      const query = this.value;
+
+      // 显示搜索历史（当输入框为空时）
+      if (!query.trim()) {
+        showSearchHistory();
+      } else {
+        // 隐藏历史
+        const historyContainer = document.querySelector('.search-history');
+        if (historyContainer) {
+          historyContainer.style.display = 'none';
+        }
+
+        // 显示建议
+        showSearchSuggestions(query);
+      }
+    });
+
+    // 监听搜索提交
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const query = this.value.trim();
+        if (query) {
+          saveSearchHistory(query);
+        }
+      }
+    });
+
+    // 监听搜索框打开
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.attributeName === 'class') {
+          const isActive = searchPopup.classList.contains('search-active');
+          if (isActive) {
+            // 搜索框打开时显示历史
+            if (!searchInput.value.trim()) {
+              showSearchHistory();
+            }
+
+            // 应用高亮
+            setTimeout(highlightSearchResults, 100);
+          } else {
+            // 搜索框关闭时隐藏历史
+            const historyContainer = document.querySelector('.search-history');
+            if (historyContainer) {
+              historyContainer.style.display = 'none';
+            }
+          }
+        }
+      });
+    });
+
+    observer.observe(searchPopup, { attributes: true });
+
+    // 4. 搜索统计显示
+    function updateSearchStats() {
+      const resultList = document.querySelector('.search-result-list');
+      if (!resultList) return;
+
+      const count = resultList.querySelectorAll('li').length;
+      let statsEl = document.querySelector('.search-stats');
+
+      if (!statsEl) {
+        statsEl = document.createElement('div');
+        statsEl.className = 'search-stats';
+
+        const inputWrapper = searchInput.closest('.search-input-wrapper');
+        if (inputWrapper) {
+          inputWrapper.parentNode.insertBefore(statsEl, inputWrapper.nextSibling);
+        }
+      }
+
+      if (count > 0) {
+        statsEl.textContent = `找到 ${count} 个结果`;
+        statsEl.style.display = 'block';
+      } else {
+        statsEl.style.display = 'none';
+      }
+    }
+
+    // 监听搜索结果变化
+    const resultsObserver = new MutationObserver(updateSearchStats);
+    const resultContainer = document.querySelector('.search-result-list');
+    if (resultContainer) {
+      resultsObserver.observe(resultContainer, { childList: true, subtree: true });
+    }
+
+  }, 1000); // 等待1秒确保搜索组件加载完成
+});
+</script>
+
+<style>
+/* 搜索历史样式 */
+.search-history {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.search-history-header {
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.search-history-list {
+  padding: 8px 0;
+}
+
+.search-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-history-item:hover {
+  background-color: #f5f5f5;
+}
+
+.search-history-text {
+  flex: 1;
+  color: #333;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-history-remove {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0 4px;
+  margin-left: 8px;
+}
+
+.search-history-remove:hover {
+  color: #ff4757;
+}
+
+/* 搜索统计 */
+.search-stats {
+  padding: 12px 16px;
+  color: #666;
+  font-size: 14px;
+  border-top: 1px solid #eee;
+  background: #f9f9f9;
+  border-radius: 0 0 8px 8px;
+}
+
+/* 搜索结果高亮优化 */
+.search-result-list li {
+  transition: background-color 0.2s;
+}
+
+.search-result-title {
+  color: #0366d6;
+  font-weight: 600;
+}
+
+.search-result-content {
+  color: #586069;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 暗色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .search-history {
+    background: #2d2d2d;
+    border-color: #444;
+  }
+
+  .search-history-header {
+    color: #aaa;
+    border-color: #444;
+  }
+
+  .search-history-item {
+    color: #ddd;
+  }
+
+  .search-history-item:hover {
+    background-color: #3a3a3a;
+  }
+
+  .search-history-text {
+    color: #ddd;
+  }
+
+  .search-stats {
+    background: #2d2d2d;
+    color: #aaa;
+    border-color: #444;
+  }
+
+  .search-result-title {
+    color: #58a6ff;
+  }
+
+  .search-result-content {
+    color: #8b949e;
+  }
+}
+</style>
+
 {# 平滑滚动支持 #}
 <style>
 html {
@@ -401,5 +823,362 @@ html {
   html {
     scroll-behavior: auto;
   }
+}
+</style>
+
+{# ============================================ #}
+{# 操作流畅度优化 #}
+{# ============================================ #}
+
+{# instant.page 预加载（简化版） #}
+<script>
+// 链接预加载
+document.addEventListener('mouseover', function(e) {
+  const link = e.target.closest('a');
+  if (!link || !link.href) return;
+
+  // 检查是否为内部链接
+  const url = new URL(link.href, window.location.origin);
+  if (url.origin !== window.location.origin) return;
+
+  // 预加载
+  const prefetchLink = document.createElement('link');
+  prefetchLink.rel = 'prefetch';
+  prefetchLink.href = link.href;
+  document.head.appendChild(prefetchLink);
+
+  // 1秒后移除，避免堆积
+  setTimeout(() => {
+    if (prefetchLink.parentNode) {
+      prefetchLink.parentNode.removeChild(prefetchLink);
+    }
+  }, 1000);
+}, { passive: true });
+</script>
+
+{# 返回顶部按钮 #}
+<button class="back-to-top" id="backToTop" aria-label="返回顶部">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+// 返回顶部按钮功能
+document.addEventListener('DOMContentLoaded', function() {
+  const backToTopBtn = document.getElementById('backToTop');
+  if (!backToTopBtn) return;
+
+  // 显示/隐藏按钮
+  function toggleBackToTop() {
+    if (window.scrollY > 300) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
+    }
+  }
+
+  // 点击滚动到顶部
+  backToTopBtn.addEventListener('click', function() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+
+  // 监听滚动
+  window.addEventListener('scroll', toggleBackToTop);
+  toggleBackToTop(); // 初始检查
+});
+</script>
+
+{# 阅读进度条 #}
+<div class="reading-progress" id="readingProgress"></div>
+
+<script>
+// 阅读进度条
+document.addEventListener('DOMContentLoaded', function() {
+  const progressBar = document.getElementById('readingProgress');
+  if (!progressBar) return;
+
+  function updateReadingProgress() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+    progressBar.style.width = scrollPercent + '%';
+
+    // 更改颜色基于进度
+    if (scrollPercent > 90) {
+      progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
+    } else if (scrollPercent > 50) {
+      progressBar.style.background = 'linear-gradient(90deg, #2196F3, #03A9F4)';
+    } else {
+      progressBar.style.background = 'linear-gradient(90deg, #667eea, #764ba2)';
+    }
+  }
+
+  window.addEventListener('scroll', updateReadingProgress);
+  updateReadingProgress();
+});
+</script>
+
+{# 代码复制按钮 #}
+<script>
+// 为所有代码块添加复制按钮
+document.addEventListener('DOMContentLoaded', function() {
+  // 查找所有代码块
+  const codeBlocks = document.querySelectorAll('pre code, .highlight, .gist-highlight');
+
+  codeBlocks.forEach(function(codeBlock) {
+    // 创建包装器
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+
+    // 如果已经有父元素是pre，则包装pre
+    let preElement = codeBlock;
+    while (preElement && preElement.tagName !== 'PRE') {
+      preElement = preElement.parentElement;
+    }
+
+    const targetElement = preElement || codeBlock;
+
+    // 包装元素
+    targetElement.parentNode.insertBefore(wrapper, targetElement);
+    wrapper.appendChild(targetElement);
+
+    // 创建复制按钮
+    const copyButton = document.createElement('button');
+    copyButton.className = 'copy-button';
+    copyButton.innerHTML = '<i class="fas fa-copy"></i> 复制';
+    copyButton.title = '复制代码';
+
+    wrapper.appendChild(copyButton);
+
+    // 复制功能
+    copyButton.addEventListener('click', function() {
+      const code = targetElement.textContent;
+      navigator.clipboard.writeText(code).then(function() {
+        // 显示成功反馈
+        const originalText = copyButton.innerHTML;
+        copyButton.innerHTML = '<i class="fas fa-check"></i> 已复制';
+        copyButton.style.backgroundColor = '#4CAF50';
+
+        setTimeout(function() {
+          copyButton.innerHTML = originalText;
+          copyButton.style.backgroundColor = '';
+        }, 2000);
+      }).catch(function(err) {
+        console.error('复制失败:', err);
+        copyButton.innerHTML = '<i class="fas fa-times"></i> 失败';
+        copyButton.style.backgroundColor = '#f44336';
+
+        setTimeout(function() {
+          copyButton.innerHTML = '<i class="fas fa-copy"></i> 复制';
+          copyButton.style.backgroundColor = '';
+        }, 2000);
+      });
+    });
+  });
+});
+</script>
+
+{# 夜间模式切换 #}
+<button class="dark-mode-toggle" id="darkModeToggle" aria-label="切换夜间模式">
+  <i class="fas fa-moon" id="darkModeIcon"></i>
+</button>
+
+<script>
+// 夜间模式切换
+document.addEventListener('DOMContentLoaded', function() {
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  const darkModeIcon = document.getElementById('darkModeIcon');
+  const THEME_KEY = 'hexo_theme';
+  const DARK_THEME = 'dark';
+  const LIGHT_THEME = 'light';
+
+  if (!darkModeToggle || !darkModeIcon) return;
+
+  // 获取当前主题
+  function getCurrentTheme() {
+    const savedTheme = localStorage.getItem(THEME_KEY);
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    return savedTheme || (systemPrefersDark ? DARK_THEME : LIGHT_THEME);
+  }
+
+  // 应用主题
+  function applyTheme(theme) {
+    const html = document.documentElement;
+
+    if (theme === DARK_THEME) {
+      html.setAttribute('data-theme', DARK_THEME);
+      darkModeIcon.className = 'fas fa-sun';
+      darkModeToggle.title = '切换日间模式';
+    } else {
+      html.removeAttribute('data-theme');
+      darkModeIcon.className = 'fas fa-moon';
+      darkModeToggle.title = '切换夜间模式';
+    }
+
+    localStorage.setItem(THEME_KEY, theme);
+  }
+
+  // 切换主题
+  function toggleTheme() {
+    const currentTheme = getCurrentTheme();
+    const newTheme = currentTheme === DARK_THEME ? LIGHT_THEME : DARK_THEME;
+    applyTheme(newTheme);
+  }
+
+  // 初始化主题
+  applyTheme(getCurrentTheme());
+
+  // 监听系统主题变化
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+    if (!localStorage.getItem(THEME_KEY)) {
+      applyTheme(e.matches ? DARK_THEME : LIGHT_THEME);
+    }
+  });
+
+  // 绑定点击事件
+  darkModeToggle.addEventListener('click', toggleTheme);
+});
+</script>
+
+{# 图片懒加载增强 #}
+<script>
+// 图片懒加载增强（补充head.swig中的功能）
+document.addEventListener('DOMContentLoaded', function() {
+  // 如果浏览器支持loading="lazy"，使用原生懒加载
+  if ('loading' in HTMLImageElement.prototype) {
+    const images = document.querySelectorAll('img:not([loading])');
+    images.forEach(img => {
+      // 如果不是关键图片（首屏内），添加懒加载
+      if (!img.classList.contains('critical-image')) {
+        img.loading = 'lazy';
+      }
+    });
+  }
+
+  // 监听图片加载完成
+  document.querySelectorAll('img').forEach(img => {
+    if (img.complete) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', function() {
+        this.classList.add('loaded');
+      });
+
+      img.addEventListener('error', function() {
+        console.warn('图片加载失败:', this.src);
+        // 可以添加错误处理，比如显示占位符
+      });
+    }
+  });
+});
+</script>
+
+{# 页面加载动画 #}
+<style>
+/* 页面切换动画 */
+.page-transition {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.page-transition.active {
+  opacity: 1;
+}
+
+/* 暗色模式适配 */
+[data-theme="dark"] .page-transition {
+  background: #1a1a1a;
+}
+
+/* 阅读进度条样式补充 */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  z-index: 10000;
+  transition: width 0.1s ease;
+}
+
+/* 返回顶部按钮样式补充 */
+.back-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(102, 126, 234, 0.9);
+  color: white;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  z-index: 999;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: #667eea;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* 夜间模式切换按钮样式补充 */
+.dark-mode-toggle {
+  position: fixed;
+  bottom: 90px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  z-index: 999;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  background: rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+[data-theme="dark"] .dark-mode-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ddd;
+}
+
+[data-theme="dark"] .dark-mode-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 </style>

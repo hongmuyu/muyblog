@@ -44,36 +44,323 @@ code {
 }
 
 // ============================================
+// 评论按钮样式优化（与body-end.swig中的样式配合）
+// ============================================
+.comment-toggle-btn.relative {
+  // 确保相对定位按钮在文章内有良好的视觉效果
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  }
+}
+
+.comment-section-container {
+  // 评论区域容器的额外样式
+  margin-top: 2.5rem;
+  margin-bottom: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(0,0,0,0.08);
+
+  .comment-toggle-btn-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// 暗色模式适配
+[data-theme="dark"] {
+  .comment-toggle-btn.relative {
+    background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+
+    &:hover {
+      background: linear-gradient(135deg, #4b0082 0%, #8a2be2 100%);
+    }
+  }
+
+  .comment-section-container {
+    border-top-color: rgba(255,255,255,0.1);
+  }
+}
+
+// ============================================
 // 搜索框美化
 // ============================================
 .local-search-popup {
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden;
+
   .local-search-input-wrapper {
     input {
       border: 2px solid #e1e4e8;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+
       &:focus {
-        border-color: #0366d6;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
       }
     }
   }
-  
+
   .local-search-result-wrapper {
+    max-height: 500px;
+    overflow-y: auto;
+
     .local-search-result-list {
+      padding: 0;
+
       li {
+        padding: 18px 24px;
         border-bottom: 1px solid #f0f0f0;
-        &:hover {
-          background-color: #f8f9fa;
+        transition: all 0.2s ease;
+
+        &:last-child {
+          border-bottom: none;
         }
-        
+
+        &:hover {
+          background-color: #f9f9ff;
+          transform: translateX(4px);
+        }
+
         a {
           color: #24292e;
+          text-decoration: none;
+          display: block;
+
           .local-search-result-title {
-            color: #0366d6;
-            font-weight: 600;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+
+            &:before {
+              content: "📄";
+              margin-right: 10px;
+              font-size: 16px;
+              opacity: 0.7;
+            }
+          }
+
+          .local-search-result-content {
+            color: #586069;
+            font-size: 14px;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+
+            em {
+              background-color: #fffacd;
+              font-style: normal;
+              font-weight: 600;
+              padding: 0 2px;
+              border-radius: 2px;
+            }
           }
         }
+      }
+    }
+  }
+}
+
+// ============================================
+// 搜索快捷键提示
+// ============================================
+.search-hotkey-hint {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 9999;
+
+  &.visible {
+    opacity: 0.9;
+  }
+
+  kbd {
+    background: #333;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    margin: 0 4px;
+  }
+}
+
+// ============================================
+// 搜索加载动画
+// ============================================
+.search-loading {
+  text-align: center;
+  padding: 40px;
+
+  .search-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(102, 126, 234, 0.1);
+    border-radius: 50%;
+    border-top-color: #667eea;
+    animation: search-spin 1s ease-in-out infinite;
+    margin-bottom: 16px;
+  }
+
+  .search-loading-text {
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+@keyframes search-spin {
+  to { transform: rotate(360deg); }
+}
+
+// ============================================
+// 无搜索结果样式
+// ============================================
+.search-no-results {
+  text-align: center;
+  padding: 60px 20px;
+
+  .search-no-results-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .search-no-results-text {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .search-no-results-suggest {
+    color: #999;
+    font-size: 14px;
+  }
+}
+
+// ============================================
+// 搜索过滤器
+// ============================================
+.search-filters {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #f9f9f9;
+
+  .search-filter-btn {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+
+    &.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+  }
+}
+
+// 暗色模式适配
+[data-theme="dark"] {
+  .local-search-popup {
+    background: #2d2d2d;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+
+    .local-search-input-wrapper {
+      input {
+        background: #3a3a3a;
+        border-color: #444;
+        color: #ddd;
+
+        &:focus {
+          border-color: #8a2be2;
+          box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+        }
+      }
+    }
+
+    .local-search-result-wrapper {
+      .local-search-result-list {
+        li {
+          border-color: #444;
+
+          &:hover {
+            background-color: #3a3a3a;
+          }
+
+          a {
+            color: #ddd;
+
+            .local-search-result-title {
+              color: #8a2be2;
+            }
+
+            .local-search-result-content {
+              color: #aaa;
+
+              em {
+                background-color: #4a4a4a;
+                color: #fff;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .search-hotkey-hint {
+    background: rgba(255,255,255,0.9);
+    color: #333;
+  }
+
+  .search-filters {
+    background: #3a3a3a;
+    border-color: #444;
+
+    .search-filter-btn {
+      background: #2d2d2d;
+      border-color: #444;
+      color: #ddd;
+
+      &:hover {
+        border-color: #8a2be2;
+        color: #8a2be2;
+      }
+
+      &.active {
+        background: #8a2be2;
+        color: white;
+        border-color: #8a2be2;
       }
     }
   }

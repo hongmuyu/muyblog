@@ -41,10 +41,32 @@
 2. 文章中引用：`![描述](图片文件名.jpg)`
 3. Hexo会自动处理路径
 
-### 方法三：命令行工具
+### 方法三：使用优化脚本
+本博客提供了强大的图片处理脚本：
+
+1. **批量图片处理** (`bin/process-images.sh`):
 ```bash
-# 使用脚本辅助上传（需自定义）
-./bin/image-upload.sh 图片路径
+# 基本用法：压缩uploads目录中的图片
+./bin/process-images.sh -s source/images/uploads -d source/images/optimized
+
+# 转换为WebP格式
+./bin/process-images.sh -f webp -q 85
+
+# 创建备份并重命名文件
+./bin/process-images.sh -b -r -v
+```
+
+2. **WebP专门优化** (`bin/optimize-images.sh`):
+```bash
+# 交互式WebP优化工具
+./bin/optimize-images.sh
+# 然后选择优化模式（单个目录、批量转换、文章资源文件夹等）
+```
+
+3. **图片引用更新** (`bin/update-image-refs.sh`):
+```bash
+# 批量更新文章中的图片引用（运行optimize-images.sh后生成）
+./bin/update-image-refs.sh
 ```
 
 ## 最佳实践
@@ -69,19 +91,76 @@
 
 ## 高级功能
 
-### 批量上传
+### 批量上传与优化
 ```bash
-# 使用PicGo命令行
+# 1. 使用PicGo命令行批量上传
 picgo upload 图片1.jpg 图片2.png
+
+# 2. 使用博客脚本批量优化
+./bin/process-images.sh --source ~/Downloads --format webp
+
+# 3. 批量更新文章引用
+find source/_posts -name "*.md" -exec sed -i 's/\.jpg/.webp/g' {} \;
 ```
 
-### 自动压缩
-配置PicGo插件：
-1. 安装 `picgo-plugin-compress` 插件
-2. 启用自动压缩功能
+### 自动压缩与转换
+1. **PicGo插件配置**:
+   - 安装 `picgo-plugin-compress` 插件
+   - 启用自动压缩功能
+   - 设置压缩质量
 
-## 注意事项
-1. GitHub免费账户有存储限制（1GB）
-2. 大图片建议先压缩再上传
-3. 定期清理未使用的图片
-4. 重要图片建议本地备份
+2. **博客自动化脚本**:
+   - `bin/optimize-images.sh`: 交互式WebP转换工具
+   - 支持响应式图片生成 (srcset)
+   - 自动生成图片使用指南
+
+### 响应式图片支持
+博客支持生成响应式图片，为不同设备提供合适尺寸：
+
+```bash
+# 生成响应式图片
+./bin/optimize-images.sh
+# 选择模式4: "生成响应式图片(srcset)"
+```
+
+生成的文件结构:
+```
+source/images/responsive/
+├── 图片名_400w.jpg
+├── 图片名_400w.webp
+├── 图片名_800w.jpg
+├── 图片名_800w.webp
+└── 图片名_1200w.jpg
+```
+
+### 图片懒加载
+已配置图片懒加载功能，在 `source/_data/styles.styl` 中定义：
+- 图片加载时淡入效果
+- 支持原生 `loading="lazy"` 属性
+- 移动端优化
+
+## 注意事项与最佳实践
+
+### 存储管理
+1. **GitHub存储限制**：免费账户1GB，注意监控使用量
+2. **图片压缩**：上传前使用脚本压缩，目标质量80-85%
+3. **格式选择**：优先使用WebP格式，节省30-50%空间
+4. **定期清理**：每季度检查并删除未使用的图片
+
+### 性能优化
+1. **图片尺寸**：博客图片宽度建议不超过1200px
+2. **懒加载**：所有图片添加 `loading="lazy"` 属性
+3. **响应式图片**：为重要图片生成srcset多尺寸版本
+4. **缓存策略**：利用GitHub Pages的CDN缓存
+
+### 工作流程
+1. **上传前**：使用 `process-images.sh` 压缩和转换格式
+2. **上传后**：运行 `optimize-images.sh` 生成优化版本
+3. **发布前**：检查所有图片引用，确保使用WebP优先
+4. **定期维护**：每月运行一次图片优化脚本
+
+### 备份策略
+1. **本地备份**：重要图片保留原始文件
+2. **版本控制**：GitHub仓库自动版本管理
+3. **多重备份**：考虑使用多个图床服务冗余备份
+4. **导出备份**：每年导出一次完整图片库

@@ -134,3 +134,72 @@ admin:
   password_hash: '$2a$10$Crpb0xPfxJpxQG8IoL6k3esNL8bruxYj0vba1Nzep6B9MVbhGWStO'
   secret: a3f59c29799c2f3ac1950ac829ee7586ffb3d56c1765f1540246c5ddbedb6db8
   deployCommand: './bin/deploy.sh'  # 使用我们的一键部署脚本
+
+# ============================================
+# 性能优化配置
+# ============================================
+
+# 字体优化 - 禁用Google Fonts，使用系统字体
+font:
+  enable: false  # 禁用外部字体加载
+
+# 静态资源压缩
+minify:
+  enable: true   # 启用HTML压缩
+  html:
+    remove_comments: true
+    collapse_whitespace: true
+    collapse_boolean_attributes: true
+    remove_redundant_attributes: true
+    remove_script_type_attributes: true
+    remove_style_link_type_attributes: true
+
+# CSS和JS优化
+css_minifier: clean-css
+js_minifier: terser
+
+# 缓存配置
+cache:
+  enable: true
+  model: memory
+  interval: 30  # 缓存检查间隔（分钟）
+
+# 图片懒加载（通过主题配置）
+# 已在 source/_data/styles.styl 中配置
+
+# 预加载关键资源
+# 在 source/_data/head.swig 中配置（如需要）
+
+# GitHub Pages兼容性
+github_pages:
+  cname: zouwenxiang.cn
+  enforce_https: true
+  jekyll: false  # 禁用Jekyll处理
+
+# 响应式图片配置
+responsive_images:
+  enable: true
+  sizes: [400, 800, 1200, 1600]
+  default_size: 800
+  quality: 85
+
+# 构建优化
+generator:
+  cache: true
+  workers: 4  # 使用多核CPU加速构建
+
+# 排除不必要的文件
+exclude:
+  - '*.log'
+  - '*.tmp'
+  - '*.swp'
+  - '*.DS_Store'
+  - 'node_modules/**/*'
+  - '.git/**/*'
+  - '.github/**/*'
+
+# 包含必要的文件
+include:
+  - 'CNAME'
+  - '.nojekyll'
+  - 'README.md'
