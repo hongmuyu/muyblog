@@ -237,8 +237,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 同时检查页面是否有文章特有的元素
     const hasArticleElement = document.querySelector('.post, .post-block, article.post, [itemtype="http://schema.org/Article"]') !== null;
 
-    // 排除归档、标签、分类等页面
-    const isSpecialPage = /\/(archives|tags|categories|about|resources|search)(\/|$)/.test(pathname);
+    // 排除归档、标签、分类等列表页面（关于和资源页面允许显示评论）
+    const isSpecialPage = /\/(archives|tags|categories|search)(\/|$)/.test(pathname);
 
     return isArticlePath && hasArticleElement && !isSpecialPage;
   }
