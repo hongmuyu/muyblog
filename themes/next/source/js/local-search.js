@@ -111,7 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show search results
         if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
-          let hitCount = indexOfTitle.length + indexOfContent.length;
+          // 标题匹配权重更高（×10）
+          let hitCount = indexOfTitle.length * 10 + indexOfContent.length;
           // Sort index by position of keyword
           [indexOfTitle, indexOfContent].forEach(index => {
             index.sort((itemLeft, itemRight) => {
@@ -193,7 +194,18 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (resultItems.length === 0) {
       resultContent.innerHTML = '<div id="no-result"><i class="far fa-frown fa-5x"></i></div>';
     } else {
+      // 标题匹配优先，其次是搜索词次数，然后是总命中次数
       resultItems.sort((resultLeft, resultRight) => {
+        // 优先显示标题匹配的结果（检查标题中是否有高亮标签）
+        const leftTitleMatch = resultLeft.item.includes('<b class="search-keyword">') &&
+                               resultLeft.item.indexOf('<b class="search-keyword">') < resultLeft.item.indexOf('</a>') + 10;
+        const rightTitleMatch = resultRight.item.includes('<b class="search-keyword">') &&
+                                resultRight.item.indexOf('<b class="search-keyword">') < resultRight.item.indexOf('</a>') + 10;
+
+        if (leftTitleMatch !== rightTitleMatch) {
+          return rightTitleMatch - leftTitleMatch;
+        }
+
         if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
           return resultRight.searchTextCount - resultLeft.searchTextCount;
         } else if (resultLeft.hitCount !== resultRight.hitCount) {
