@@ -7,24 +7,13 @@
 <link rel="preload" href="/css/main.css" as="style">
 <link rel="preload" href="/js/main.js" as="script">
 
-{# 预连接重要第三方域名 #}
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{# 预连接第三方域名（仅保留大陆可稳定访问的） #}
 <link rel="preconnect" href="https://giscus.app">
-<link rel="preconnect" href="https://raw.githubusercontent.com">
 
 {# DNS预获取 #}
-<link rel="dns-prefetch" href="//zouwenxiang.cn">
-<link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
-<link rel="dns-prefetch" href="//fonts.googleapis.com">
-<link rel="dns-prefetch" href="//fonts.gstatic.com">
 <link rel="dns-prefetch" href="//giscus.app">
-<link rel="dns-prefetch" href="//raw.githubusercontent.com">
 
-{# 异步加载非关键CSS #}
-<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
+{# 图标库使用主题本地 lib（themes/next 依赖本地 fontawesome），不再从 cdnjs 加载 #}
 
 {# 关键CSS内联（可选） #}
 {# 如果需要进一步优化首屏渲染，可以考虑内联关键CSS #}
