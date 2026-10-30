@@ -174,7 +174,7 @@ site_state: true
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
   GitHub: https://github.com/hongmuyu || github
-  E-Mail: ashyness996@gmail.com || envelope
+  QQ 邮箱: mailto:2407130680@qq.com || envelope
   知乎: https://www.zhihu.com/people/98-65-27-80 || gratipay
 
 social_icons:
