@@ -5,7 +5,7 @@ backend:
   # 使用 PKCE 免代理认证，无需 client_secret
   auth_type: pkce
   # GitHub OAuth App 的 Client ID（创建后替换）
-  app_id: REPLACE_WITH_YOUR_OAUTH_APP_CLIENT_ID
+  app_id: Ov23liO3r7hpfzEOkxj5
 
 site_url: https://zouwenxiang.cn
 display_url: https://zouwenxiang.cn
