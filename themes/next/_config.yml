@@ -187,10 +187,8 @@ links_settings:
   title: 链接网站  #修改名称
 
 links:
+  # 如需在侧栏展示"链接网站"板块，按此格式添加：
   #Title: http://yoursite.com
-  百度: https://baidu.com
-  CSDN: https://www.csdn.net
-  知乎: https://www.zhihu.com
 
 # Table of Contents in the Sidebar
 # Front-matter variable (unsupport wrap expand_all).
