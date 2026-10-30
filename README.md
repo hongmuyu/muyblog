@@ -53,6 +53,9 @@ Blog/
 ├── _config.landscape.yml       # Landscape 主题配置（备用）
 ├── package.json                # 项目依赖
 ├── CNAME                       # 自定义域名配置
+├── .github/
+│   └── workflows/
+│       └── pages.yml           # GitHub Actions 自动构建部署
 ├── scaffolds/                  # 文章模板
 │   ├── post.md                 # 文章模板
 │   ├── draft.md                # 草稿模板
@@ -60,25 +63,27 @@ Blog/
 ├── source/                     # 源文件目录
 │   ├── _posts/                 # 博客文章
 │   ├── _drafts/                # 草稿文章
+│   ├── admin/                  # Decap CMS 网页管理后台
+│   │   ├── index.html
+│   │   └── config.yml
 │   ├── _data/                  # 自定义数据文件
 │   │   ├── body-end.swig      # 尾部脚本（评论、返回顶部等）
 │   │   ├── head.swig          # 头部扩展
 │   │   └── styles.styl        # 自定义样式
 │   ├── images/                 # 全局图片资源
+│   ├── about/                  # 关于页面
 │   ├── tags/                   # 标签页面
 │   └── categories/             # 分类页面
 ├── themes/                     # 主题目录
 │   └── next/                   # NexT 主题
 ├── bin/                        # 自定义脚本
-│   ├── deploy.sh              # 部署脚本
+│   ├── deploy.sh              # 发布（提交 + 推送，触发 Actions）
 │   ├── new-post.sh            # 创建文章
-│   ├── write-flow.sh          # 完整写作流程
-│   ├── optimize-images.sh     # 图片优化
+│   ├── new-post-enhanced.sh   # 创建文章（自动 Front Matter）
+│   ├── delete-post.sh         # 删除文章
+│   ├── process-images.sh      # 图片处理
 │   └── configure-giscus.sh    # 评论配置
 └── docs/                       # 项目文档
-    ├── quick-start-guide.md   # 快速开始
-    ├── deploy-guide.md        # 部署指南
-    └── giscus-config-guide.md # 评论配置指南
 ```
 
 ---
@@ -125,19 +130,10 @@ npm run new "文章标题" 标签1 标签2
 # 或使用脚本
 ./bin/new-post.sh "文章标题"
 
-# 完整写作流程（推荐）
-./bin/write-flow.sh
+# 发布博客（提交 + 推送，Actions 自动构建部署）
+./bin/deploy.sh
 
-# 生成静态文件
-hexo generate
-
-# 清理缓存
-hexo clean
-
-# 部署到 GitHub Pages
-npm run deploy
-
-# 启动 hexo-admin 后台
+# 启动 hexo-admin 本地后台
 npm run admin
 ```
 
@@ -212,26 +208,48 @@ keywords: 关键词1, 关键词2
 
 ## 部署
 
-### 自动部署（推荐）
+> ⚠️ **发布方式已统一为 GitHub Actions 自动部署。**
+> 仓库 main 分支只存放**源码**，由 Actions 在云端构建并发布到 GitHub Pages。
+> **不要**使用 `hexo deploy` 或 `npm run deploy`（已移除），那会把构建产物强推到 main 分支、覆盖源码。
+
+### 发布流程（唯一方式）
 
 ```bash
-# 一键部署
+# 方式1：一键脚本（自动提交 + 推送）
 ./bin/deploy.sh
+
+# 方式2：手动推送
+git add .
+git commit -m "更新博客内容"
+git push origin main
 ```
 
-### 手动部署
+推送后 GitHub Actions 自动完成：安装依赖 → `hexo generate` → 发布到 GitHub Pages，约 1-2 分钟生效。
 
-```bash
-# 生成静态文件
-hexo clean && hexo generate
+- **部署进度**: https://github.com/hongmuyu/muyblog/actions
+- **在线访问**: https://zouwenxiang.cn
 
-# 部署
-hexo deploy
-```
+---
 
-### GitHub Actions 自动部署
+## 网页写作（Decap CMS）
 
-项目已配置 `.github/workflows/pages.yml`，推送代码到 main 分支会自动触发部署。
+博客内置了 [Decap CMS](https://decapcms.org/) 网页管理后台，访问 `https://zouwenxiang.cn/admin/` 即可在浏览器（含手机）里写文章、传图片、点发布——它会把内容直接 commit 到本仓库 main 分支，并触发自动部署。
+
+### 首次配置（只需一次）
+
+1. 打开 GitHub → **Settings → Developer settings → OAuth Apps → New OAuth App**
+2. 填写：
+   - **Application name**: `muyblog CMS`
+   - **Homepage URL**: `https://zouwenxiang.cn`
+   - **Authorization callback URL**: `https://zouwenxiang.cn/admin/`
+3. 创建后复制 **Client ID**，填入 `source/admin/config.yml` 的 `app_id` 字段并推送。
+
+> 认证采用 PKCE 方式，**不需要 Client Secret**，无需部署任何代理服务。
+
+### 手机端写作
+
+- **轻度应急**：手机浏览器打开 `/admin/`，或用 GitHub 官方 App 在 `source/_posts/` 新建 `.md` 文件提交
+- **重度写作**：手机 Obsidian 编辑文章，回到电脑（或用 Git 客户端）推送发布
 
 ---
 
@@ -251,11 +269,8 @@ language: zh-CN
 # URL
 url: https://zouwenxiang.cn
 
-# 部署配置
-deploy:
-  type: git
-  repo: git@github.com:hongmuyu/muyblog.git
-  branch: main
+# 部署：不在此配置，统一由 GitHub Actions 完成
+# 详见 .github/workflows/pages.yml
 ```
 
 ### 主题配置 (`themes/next/_config.yml`)
