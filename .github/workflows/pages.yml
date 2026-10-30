@@ -38,6 +38,13 @@ jobs:
       - name: Build with Hexo
         run: npx hexo generate
 
+      - name: Verify build output
+        run: |
+          if [ ! -f public/index.html ]; then
+            echo "::error::首页未生成——很可能把文章删光了（Hexo 零文章时不生成首页），本次不部署，站点保持上一个正常版本"
+            exit 1
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
