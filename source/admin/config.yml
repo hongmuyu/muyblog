@@ -2,10 +2,8 @@ backend:
   name: github
   repo: hongmuyu/muyblog
   branch: main
-  # 使用 PKCE 免代理认证，无需 client_secret
-  auth_type: pkce
-  # GitHub OAuth App 的 Client ID（创建后替换）
-  app_id: Ov23liO3r7hpfzEOkxj5
+  # 登录方式：个人访问令牌（PAT），无需 OAuth 服务器
+  # 令牌在后台登录页手动输入，需 Contents 读写权限，详见 README
 
 site_url: https://zouwenxiang.cn
 display_url: https://zouwenxiang.cn

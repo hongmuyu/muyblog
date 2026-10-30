@@ -63,9 +63,10 @@ Blog/
 ├── source/                     # 源文件目录
 │   ├── _posts/                 # 博客文章
 │   ├── _drafts/                # 草稿文章
-│   ├── admin/                  # Decap CMS 网页管理后台
+│   ├── admin/                  # Sveltia CMS 网页管理后台
 │   │   ├── index.html
-│   │   └── config.yml
+│   │   ├── config.yml
+│   │   └── sveltia-cms.js
 │   ├── _data/                  # 自定义数据文件
 │   │   ├── body-end.swig      # 尾部脚本（评论、返回顶部等）
 │   │   ├── head.swig          # 头部扩展
@@ -232,24 +233,27 @@ git push origin main
 
 ---
 
-## 网页写作（Decap CMS）
+## 网页写作（Sveltia CMS）
 
-博客内置了 [Decap CMS](https://decapcms.org/) 网页管理后台，访问 `https://zouwenxiang.cn/admin/` 即可在浏览器（含手机）里写文章、传图片、点发布——它会把内容直接 commit 到本仓库 main 分支，并触发自动部署。
+博客内置了 [Sveltia CMS](https://sveltiacms.app/) 网页管理后台（Decap CMS 的现代替代，配置完全兼容），访问 `https://zouwenxiang.cn/admin/` 即可在浏览器（含手机）里写文章、传图片、点发布——它会把内容直接 commit 到本仓库 main 分支，并触发自动部署。
 
-### 首次配置（只需一次）
+### 登录方式：个人访问令牌（PAT）
 
-1. 打开 GitHub → **Settings → Developer settings → OAuth Apps → New OAuth App**
-2. 填写：
-   - **Application name**: `muyblog CMS`
-   - **Homepage URL**: `https://zouwenxiang.cn`
-   - **Authorization callback URL**: `https://zouwenxiang.cn/admin/`
-3. 创建后复制 **Client ID**，填入 `source/admin/config.yml` 的 `app_id` 字段并推送。
+> GitHub 平台不支持纯静态页面的 OAuth 免服务器登录，而个人令牌（PAT）方案**零服务器、零维护**，单人博客首选。
 
-> 认证采用 PKCE 方式，**不需要 Client Secret**，无需部署任何代理服务。
+1. 打开 GitHub → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**
+2. 配置：
+   - **Repository access**: Only select repositories → 勾选 `hongmuyu/muyblog`
+   - **Permissions → Repository permissions → Contents**: `Read and write`（Metadata 会自动带上）
+3. 生成并复制令牌，打开 `https://zouwenxiang.cn/admin/`，在登录框粘贴令牌即可进入后台。
+
+> - 令牌保存在你浏览器本地，只在你自己的设备上使用
+> - 令牌到期后在 GitHub 上重新生成一个、重新粘贴即可
+> - 后台主程序已本地自托管（`source/admin/sveltia-cms.js`），不依赖第三方 CDN 也能加载
 
 ### 手机端写作
 
-- **轻度应急**：手机浏览器打开 `/admin/`，或用 GitHub 官方 App 在 `source/_posts/` 新建 `.md` 文件提交
+- **轻度应急**：手机浏览器打开 `/admin/`，粘贴令牌登录
 - **重度写作**：手机 Obsidian 编辑文章，回到电脑（或用 Git 客户端）推送发布
 
 ---
