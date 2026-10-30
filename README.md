@@ -228,6 +228,7 @@ git push origin main
 
 - **部署进度**: https://github.com/hongmuyu/muyblog/actions
 - **在线访问**: https://zouwenxiang.cn
+- **滚动备份**: 每次部署成功后，Actions 会自动把 main 同步到 `backup` 分支，作为站点源码的应急备份
 
 ---
 
