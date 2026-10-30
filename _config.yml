@@ -8,6 +8,13 @@ subtitle: ''
 description: 选择有时候比努力更重要     #简介或者格言
 keywords:
 author: 木与宁     #作者
+
+# RSS 订阅（hexo-generator-feed）
+feed:
+  type: atom
+  path: atom.xml
+  limit: 20
+  content: true
 language: zh-CN     #主题语言
 timezone: Asia/Shanghai    #中国的时区
 

@@ -1,0 +1,10 @@
+# 友链数据：添加一条即可在友链页自动生成卡片
+# 格式说明：
+#   name:   站点名称
+#   url:    站点地址（末尾带 /）
+#   desc:   一句话介绍
+#   avatar: 头像图片地址（可省略）
+- name: 木与宁的小站
+  url: https://zouwenxiang.cn/
+  desc: 选择有时候比努力更重要
+  avatar: /images/avatar.png

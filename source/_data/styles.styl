@@ -446,3 +446,77 @@ img {
     background: var(--btn-bg);
   }
 }
+
+// ============ 友链卡片墙 ============
+.links-subtitle
+  color: var(--text-color-secondary, #999)
+  margin-bottom: 1.5rem
+
+.friend-links
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr))
+  gap: 16px
+  margin: 1rem 0
+
+.friend-card
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 8px
+  padding: 20px 14px
+  border-radius: 12px
+  background: var(--card-bg-color, #fff)
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06)
+  text-align: center
+  transition: transform 0.25s ease, box-shadow 0.25s ease
+  color: inherit
+
+.friend-card:hover
+  transform: translateY(-4px)
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12)
+
+.friend-avatar
+  width: 64px
+  height: 64px
+  border-radius: 50%
+  object-fit: cover
+
+.friend-name
+  font-weight: 600
+  font-size: 1.02em
+
+.friend-desc
+  font-size: 0.86em
+  color: var(--text-color-secondary, #888)
+  line-height: 1.5
+
+.friend-apply
+  border: 1px dashed #ccc
+  background: transparent
+  cursor: default
+
+.links-note
+  margin-top: 1.5rem
+  font-size: 0.88em
+  color: var(--text-color-secondary, #999)
+
+// ============ 关于页头部 ============
+.about-hero
+  text-align: center
+  margin-bottom: 1.5rem
+
+  img
+    width: 110px
+    height: 110px
+    border-radius: 50%
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12)
+
+  h1
+    margin: 0.6rem 0 0.2rem
+
+  blockquote
+    display: inline-block
+    margin: 0.4rem auto 0
+    border-left: none
+    color: var(--text-color-secondary, #888)
+    font-style: italic

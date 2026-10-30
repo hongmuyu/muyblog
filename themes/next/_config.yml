@@ -120,7 +120,8 @@ menu:
   archives: /archives/ || archive      #归档
   categories: /categories/ || th       #分类
   tags: /tags/ || tags                 #标签
-  #about: /about/ || user               #关于
+  links: /links/ || link                #友链
+  about: /about/ || user                #关于
   #resources: /resources/ || download   #资源
   #schedule: /schedule/ || calendar    #日历
   #sitemap: /sitemap.xml || sitemap    #站点地图，供搜索引擎爬取
@@ -173,7 +174,7 @@ site_state: true
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
   GitHub: https://github.com/hongmuyu || github
-  E-Mail: ashyness996@gamil.com || envelope
+  E-Mail: ashyness996@gmail.com || envelope
   知乎: https://www.zhihu.com/people/98-65-27-80 || gratipay
 
 social_icons:
