@@ -33,7 +33,7 @@ comments: false
 
 - GitHub：[hongmuyu](https://github.com/hongmuyu)
 - 知乎：[@木与宁](https://www.zhihu.com/people/98-65-27-80)
-- 邮箱：[2407130680@qq.com](mailto:2407130680@qq.com)
+- 邮箱：[2916697279@qq.com](mailto:2916697279@qq.com)
 
 ## 关于本站
 
