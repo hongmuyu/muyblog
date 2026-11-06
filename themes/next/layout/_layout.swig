@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ config.language }}">
 <head>
-  {{ partial('_partials/head/head.swig', {}, {cache: theme.cache.enable}) }}
+  {{ partial('_partials/head/head.swig', {}, {cache: false}) }}
   {% include '_partials/head/head-unique.swig' %}
   {{- next_inject('head') }}
   <title>{% block title %}{% endblock %}</title>
@@ -43,7 +43,7 @@
     </footer>
   </div>
 
-  {{ partial('_scripts/index.swig', {}, {cache: theme.cache.enable}) }}
+  {{ partial('_scripts/index.swig', {}, {cache: false}) }}
   {{ partial('_third-party/index.swig', {}, {cache: theme.cache.enable}) }}
 
   {%- if theme.pjax %}

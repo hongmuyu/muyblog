@@ -5,7 +5,7 @@
   {%- set js_vendors = js_vendors | attr('pjax', 'pjax/pjax.min.js') %}
 {%- endif %}
 
-{%- if theme.fancybox %}
+{%- if theme.fancybox and page.layout === 'post' %}
   {%- set js_vendors = js_vendors | attr('jquery', '//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js') %}
   {%- set js_vendors = js_vendors | attr('fancybox', '//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js') %}
 {%- endif %}
