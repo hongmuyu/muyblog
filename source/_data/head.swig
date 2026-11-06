@@ -24,7 +24,6 @@
 
 {# 浏览器缓存控制 #}
 <meta http-equiv="Cache-Control" content="public, max-age=3600">
-<meta http-equiv="Expires" content="{{ now | date('r', 3600) }}">
 
 {# PWA支持（基础） #}
 <meta name="theme-color" content="#667eea">

@@ -1129,3 +1129,62 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 </style>
+
+{# 私密文章访问守卫与正文解密 #}
+<script>
+(function () {
+  'use strict';
+  try {
+    if (location.pathname.indexOf('/secret') === 0) return;
+    // 标记串拆写，避免匹配到本脚本自身的源码文本
+    var flag = '<!-- flag of hidden' + ' posts -->';
+    if (document.body.innerHTML.indexOf(flag) === -1) return;
+
+    var box = document.querySelector('.secret-post[data-cipher]');
+    var jwk = sessionStorage.getItem('secret-key');
+    if (sessionStorage.getItem('secret-unlocked') !== '1' || !jwk) {
+      // 未解锁：记下当前页，送去密码门（解锁后门页会跳回来）
+      sessionStorage.setItem('secret-return', location.pathname);
+      location.replace('/secret/');
+      return;
+    }
+    if (!box) return; // 本地无密码开发模式的明文页，无需解密
+
+    // 已解锁：用门页存入的会话密钥（JWK）就地解密正文
+    var raw = (function (b64) {
+      var bin = atob(b64);
+      var arr = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+      return arr;
+    })(box.getAttribute('data-cipher'));
+    var iv = raw.slice(16, 28);
+    var data = raw.slice(28); // salt 16 + iv 12 之后是 ciphertext + GCM tag（salt 仅派生密钥用）
+    crypto.subtle.importKey('jwk', JSON.parse(jwk), { name: 'AES-GCM' }, false, ['decrypt'])
+      .then(function (key) {
+        return crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, data);
+      })
+      .then(function (plain) {
+        box.innerHTML = new TextDecoder().decode(plain);
+        box.removeAttribute('data-cipher');
+        sessionStorage.removeItem('secret-post-retry');
+      })
+      .catch(function () {
+        // 失败可能是缓存了旧页面（或密码已轮换）：先带随机参数强制重取一次，
+        // 仍失败才判定密钥失效，清掉会话凭证回门页重输
+        if (!sessionStorage.getItem('secret-post-retry')) {
+          sessionStorage.setItem('secret-post-retry', '1');
+          var u = new URL(location.href);
+          u.searchParams.set('r', Date.now());
+          location.replace(u.toString());
+          return;
+        }
+        sessionStorage.removeItem('secret-post-retry');
+        sessionStorage.removeItem('secret-unlocked');
+        sessionStorage.removeItem('secret-key');
+        sessionStorage.removeItem('secret-list');
+        sessionStorage.setItem('secret-return', location.pathname);
+        location.replace('/secret/');
+      });
+  } catch (e) {}
+})();
+</script>

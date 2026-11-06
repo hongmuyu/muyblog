@@ -41,7 +41,7 @@ category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
 # Decap CMS 管理界面原样输出，不参与渲染
-skip_render: admin/**
+skip_render: [admin/**, admin-secret/**]
 
 # Writing
 new_post_name: :title.md # File name of new posts
@@ -218,3 +218,20 @@ baidusitemap:
 #   message:  文章页密码输入框的提示语（可省略）
 encrypt:
   enable: true
+
+# 私密分类：归入「私密」分类的文章自动标记 hidden，全站隐藏（首页/归档/标签/搜索/RSS/sitemap），
+# 仅可通过 /secret/ 密码门访问。依赖 hexo-hide-posts 插件与 scripts/secret-category.js
+hide_posts:
+  enable: true
+  filter: hidden
+  allowlist_generators:
+    - secret-page
+  noindex: true
+
+# 私密分类密码通过环境变量 SECRET_CATEGORY_PASSWORD 提供：
+#   - GitHub 仓库 Settings → Secrets and variables → Actions 新增 SECRET_CATEGORY_PASSWORD
+#   - 本地预览：export SECRET_CATEGORY_PASSWORD=你的密码
+# CI 构建时若缺失该变量会直接报错终止，杜绝明文发布
+secret_category:
+  name: 私密
+  url: secret

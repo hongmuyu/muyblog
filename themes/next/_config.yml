@@ -124,6 +124,7 @@ menu:
   comments: /comments/ || fa fa-comments      #留言板
   moments: /moments/ || fa fa-comment-dots    #碎碎念
   charts: /charts/ || fa fa-chart-bar  #数据图表
+  secret: /secret/ || fa fa-lock              #私密
   about: /about/ || fa fa-user         #关于
   #resources: /resources/ || download   #资源
   #schedule: /schedule/ || calendar    #日历

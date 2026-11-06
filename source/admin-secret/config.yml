@@ -1,0 +1,34 @@
+backend:
+  name: github
+  repo: hongmuyu/muyblog-secret
+  branch: main
+  # 登录方式：个人访问令牌（PAT），需对私有仓库 muyblog-secret 有 Contents 读写权限
+  # 令牌仅存储在浏览器本地，与公开后台互不影响
+
+site_url: https://zouwenxiang.cn
+display_url: https://zouwenxiang.cn
+locale: zh_Hans
+
+slug:
+  encoding: unicode
+  clean_accents: false
+  sanitize_replacement: "-"
+
+collections:
+  - name: posts
+    label: 私密文章
+    label_singular: 私密文章
+    folder: posts
+    create: true
+    slug: "{{slug}}"
+    sortable_fields: [date, title, updated]
+    summary: "{{title}} - {{date}}"
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 发布日期, name: date, widget: datetime, format: "YYYY-MM-DD HH:mm:ss", date_format: "YYYY-MM-DD", time_format: "HH:mm:ss" }
+      - { label: 更新日期, name: updated, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss", date_format: "YYYY-MM-DD", time_format: "HH:mm:ss" }
+      # 私密分类是隐藏机制的开关，默认值已锁死，请勿删改
+      - { label: 分类, name: categories, widget: list, default: ["私密"] }
+      - { label: 开启评论, name: comments, widget: boolean, default: false, required: false }
+      # 注意：私密正文整页加密，但图片等外链资源无法加密，涉密内容请勿配图
+      - { label: 正文, name: body, widget: markdown }

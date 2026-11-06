@@ -35,8 +35,22 @@ jobs:
         with:
           enablement: true
 
+      - name: Fetch secret content
+        # 私密文章存放在独立私有仓库 muyblog-secret，用 PAT 拉取到 .secret-content，
+        # 构建脚本（scripts/secret-category.js）会自动同步进 source/_posts/secret/ 并整页加密
+        env:
+          SECRET_CONTENT_PAT: ${{ secrets.SECRET_CONTENT_PAT }}
+        run: |
+          if [ -n "$SECRET_CONTENT_PAT" ]; then
+            git clone --depth 1 "https://x-access-token:${SECRET_CONTENT_PAT}@github.com/hongmuyu/muyblog-secret.git" .secret-content
+          else
+            echo "::warning::SECRET_CONTENT_PAT 未配置，本次构建不含私密文章"
+          fi
+
       - name: Build with Hexo
         run: npx hexo generate
+        env:
+          SECRET_CATEGORY_PASSWORD: ${{ secrets.SECRET_CATEGORY_PASSWORD }}
 
       - name: Verify build output
         run: |
