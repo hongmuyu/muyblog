@@ -52,7 +52,8 @@ language_switcher: false
 
 footer:
   # Specify the date when the site was setup. If not defined, current year will be used.
-  since: 2025-10-28
+  # 只写年份：写成 2025-10-28 会被 YAML 解析成 Date 对象，模板直接输出会导致页脚出现完整 GMT 时间串
+  since: 2025
 
   # Icon between year and copyright info.
   icon:
