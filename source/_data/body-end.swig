@@ -179,6 +179,7 @@
 </style>
 
 <!-- 右侧悬浮操作按钮 -->
+{%- if page.layout === 'post' or page.path === 'comments/index.html' %}
 <div class="sidebar-actions" id="sidebarActions">
   <button class="comment-toggle-btn" id="commentToggleBtn" title="发表评论">
     <i class="fas fa-comment"></i>
@@ -434,6 +435,7 @@ window.addEventListener('message', function(event) {
   }
 });
 </script>
+{%- endif %}
 
 {# 快捷键支持：Ctrl+K 或 / 键触发搜索 #}
 <script>
