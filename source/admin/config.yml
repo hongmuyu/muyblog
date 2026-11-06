@@ -38,3 +38,19 @@ collections:
       - { label: 显示目录, name: toc, widget: boolean, default: true, required: false }
       - { label: 开启评论, name: comments, widget: boolean, default: true, required: false }
       - { label: 正文, name: body, widget: markdown }
+
+  - name: moments
+    label: 碎碎念
+    files:
+      - name: moments-data
+        label: 碎碎念内容
+        file: source/_data/moments.yml
+        fields:
+          - label: 动态列表
+            name: items
+            widget: list
+            add_label: 添加一条动态
+            fields:
+              - { label: 时间, name: date, widget: datetime, format: "YYYY-MM-DD HH:mm", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
+              - { label: 内容, name: content, widget: text }
+              - { label: 心情, name: mood, widget: string, required: false }

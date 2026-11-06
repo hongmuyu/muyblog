@@ -80,6 +80,8 @@ index_generator:
 # Category & Tag
 default_category: uncategorized
 category_map:
+  '🌱 建站手记': notes
+  '💼 实习日记': internship
 tag_map:
 
 # Metadata elements
@@ -200,3 +202,19 @@ include:
   - 'CNAME'
   - '.nojekyll'
   - 'README.md'
+
+# 站点地图：sitemap.xml 给 Google/Bing，baidusitemap.xml 给百度
+sitemap:
+  path: sitemap.xml
+  rel: false
+
+baidusitemap:
+  path: baidusitemap.xml
+
+# 文章加密（hexo-blog-encrypt）
+# 用法：在文章 front-matter 中添加
+#   password: 你的密码
+#   abstract: 列表页里显示的提示文字（可省略）
+#   message:  文章页密码输入框的提示语（可省略）
+encrypt:
+  enable: true

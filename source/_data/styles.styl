@@ -520,3 +520,178 @@ img {
     border-left: none
     color: var(--text-color-secondary, #888)
     font-style: italic
+
+// ============ 碎碎念时间线 ============
+.moments-subtitle
+  color: var(--text-color-secondary, #999)
+  margin-bottom: 1.5rem
+
+.moments-list
+  margin: 1rem 0
+  padding-left: 18px
+  border-left: 2px solid rgba(102, 126, 234, 0.25)
+
+.moment-item
+  position: relative
+  margin-bottom: 1.4rem
+
+.moment-dot
+  position: absolute
+  left: -25px
+  top: 8px
+  width: 10px
+  height: 10px
+  border-radius: 50%
+  background: #667eea
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15)
+
+.moment-card
+  padding: 14px 16px
+  border-radius: 10px
+  background: var(--card-bg-color, #fff)
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05)
+
+.moment-meta
+  display: flex
+  align-items: center
+  gap: 10px
+  margin-bottom: 6px
+  font-size: 0.82em
+  color: var(--text-color-secondary, #999)
+
+.moment-mood
+  background: rgba(102, 126, 234, 0.12)
+  color: #667eea
+  padding: 1px 10px
+  border-radius: 999px
+  font-weight: 600
+
+.moment-content
+  line-height: 1.7
+  white-space: pre-wrap
+
+.moment-empty
+  color: var(--text-color-secondary, #999)
+  padding: 2rem 0
+  text-align: center
+
+// ============ 数据图表页 ============
+.charts-subtitle
+  color: var(--text-color-secondary, #999)
+  margin-bottom: 1.5rem
+
+.chart-summary
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr))
+  gap: 12px
+  margin: 1rem 0 2rem
+
+.chart-stat
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 4px
+  padding: 16px 8px
+  border-radius: 12px
+  background: var(--card-bg-color, #fff)
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06)
+
+  strong
+    font-size: 1.3em
+    color: #667eea
+
+  span
+    font-size: 0.82em
+    color: var(--text-color-secondary, #888)
+
+.chart-section
+  margin-bottom: 2rem
+
+  h3
+    margin: 0 0 0.8rem
+    font-size: 1.05em
+
+    i
+      color: #667eea
+      margin-right: 6px
+
+.chart-row
+  display: flex
+  align-items: center
+  gap: 10px
+  margin-bottom: 8px
+
+.chart-label
+  flex: 0 0 8.5em
+  font-size: 0.88em
+  text-align: right
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
+.chart-track
+  flex: 1
+  height: 14px
+  border-radius: 999px
+  background: rgba(102, 126, 234, 0.1)
+  overflow: hidden
+
+.chart-bar
+  display: block
+  height: 100%
+  border-radius: 999px
+  background: linear-gradient(90deg, #667eea, #764ba2)
+  transition: width 0.6s ease
+
+.chart-count
+  flex: 0 0 2em
+  font-size: 0.85em
+  color: var(--text-color-secondary, #888)
+
+// ============ 404 页 ============
+.not-found
+  text-align: center
+  padding: 2rem 0
+
+.not-found-emoji
+  font-size: 4em
+
+.not-found-text
+  font-size: 1.3em
+  font-weight: 600
+  margin: 0.8rem 0 0.3rem
+
+.not-found-hint
+  color: var(--text-color-secondary, #999)
+  margin-bottom: 1.5rem
+
+.not-found-actions
+  display: flex
+  justify-content: center
+  gap: 14px
+  flex-wrap: wrap
+
+.not-found-btn
+  display: inline-flex
+  align-items: center
+  gap: 8px
+  padding: 10px 22px
+  border-radius: 999px
+  border: none
+  cursor: pointer
+  font-size: 0.95em
+  color: #fff
+  background: linear-gradient(135deg, #667eea, #764ba2)
+  text-decoration: none
+  transition: transform 0.2s ease, box-shadow 0.2s ease
+
+  &:hover
+    transform: translateY(-2px)
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35)
+
+// ============ 侧栏统计补充行 ============
+.site-state-extra
+  margin-top: 12px
+
+  .site-state-item-count
+    font-size: 1em

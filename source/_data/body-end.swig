@@ -240,7 +240,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 排除归档、标签、分类等列表页面（关于和资源页面允许显示评论）
     const isSpecialPage = /\/(archives|tags|categories|search)(\/|$)/.test(pathname);
 
-    return isArticlePath && hasArticleElement && !isSpecialPage;
+    // 留言板页面也显示评论
+    const isBoardPage = /^\/comments\/(index\.html)?$/.test(pathname);
+
+    return (isArticlePath && hasArticleElement && !isSpecialPage) || isBoardPage;
   }
 
   // 如果不是文章页面，隐藏评论按钮
@@ -253,6 +256,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // 是文章页面，显示评论按钮
   sidebarActions.style.display = 'flex';
   console.log('博客文章页面，显示评论按钮');
+
+  // 留言板页面：自动展开评论区，无需手动点击按钮
+  if (/^\/comments\/(index\.html)?$/.test(window.location.pathname)) {
+    setTimeout(function () {
+      if (!isCommentVisible) commentBtn.click();
+    }, 500);
+  }
 
   // 将评论容器移动到文章末尾
   function moveCommentContainer() {

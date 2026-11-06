@@ -60,6 +60,21 @@
 </div>
 {%- endif %}
 
+{%- if site.posts.length > 0 %}
+<div class="site-state-wrap site-state-extra motion-element">
+  <nav class="site-state">
+    <div class="site-state-item">
+      <span class="site-state-item-count">{{ site_total_words() }}</span>
+      <span class="site-state-item-name">本站总字数</span>
+    </div>
+    <div class="site-state-item">
+      <span class="site-state-item-count">{{ date(site_last_updated(), 'YYYY-MM-DD') }}</span>
+      <span class="site-state-item-name">最后更新</span>
+    </div>
+  </nav>
+</div>
+{%- endif %}
+
 {%- if theme.chat.enable and theme.chat.service !== '' %}
   <div class="sidebar-button motion-element">
   {%- if theme.chat.service == 'chatra' and theme.chatra.enable %}
