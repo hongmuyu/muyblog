@@ -18,7 +18,12 @@
 
     <a href="{{ config.root }}" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
+      {#- 首页用 h1 承载站点标题；其它页面标题已有 h1，站点名降级为 div 避免重复 h1 #}
+      {%- if page.__index %}
       <h1 class="site-title">{{ title }}</h1>
+      {%- else %}
+      <div class="site-title">{{ title }}</div>
+      {%- endif %}
       <span class="logo-line-after"><i></i></span>
     </a>
     {%- if subtitle %}
