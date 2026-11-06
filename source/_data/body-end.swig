@@ -96,19 +96,26 @@
 /* 移动端适配 */
 @media (max-width: 767px) {
   .sidebar-actions {
-    right: 15px;
+    /* 375px 视口下正文右边界约 330px，按钮宽 40 + right 3 = 332，避免压住正文文字 */
+    right: 3px;
     bottom: 75px;
     gap: 10px;
+    opacity: 0.75;
+  }
+
+  .sidebar-actions:active,
+  .sidebar-actions:hover {
+    opacity: 1;
   }
 
   .comment-toggle-btn {
-    width: 44px;
-    height: 44px;
-    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
   }
 
   .comment-toggle-btn i {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .comment-toggle-btn .comment-count {
