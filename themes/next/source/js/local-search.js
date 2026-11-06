@@ -190,9 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
     if (keywords.length === 1 && keywords[0] === '') {
-      resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>';
+      resultContent.innerHTML = '<div id="no-result"><svg class="fa fa-search fa-5x" data-icon="search" aria-hidden="true" focusable="false"><use href="#i-search" xlink:href="#i-search"/></svg></div>';
     } else if (resultItems.length === 0) {
-      resultContent.innerHTML = '<div id="no-result"><i class="far fa-frown fa-5x"></i></div>';
+      resultContent.innerHTML = '<div id="no-result"><svg class="far fa-frown fa-5x" data-icon="frown" aria-hidden="true" focusable="false"><use href="#i-frown" xlink:href="#i-frown"/></svg></div>';
     } else {
       // 标题匹配优先，其次是搜索词次数，然后是总命中次数
       resultItems.sort((resultLeft, resultRight) => {
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
           return data;
         });
         // Remove loading animation
-        document.getElementById('no-result').innerHTML = '<i class="fa fa-search fa-5x"></i>';
+        document.getElementById('no-result').innerHTML = '<svg class="fa fa-search fa-5x" data-icon="search" aria-hidden="true" focusable="false"><use href="#i-search" xlink:href="#i-search"/></svg>';
         inputEventFunction();
       });
   };

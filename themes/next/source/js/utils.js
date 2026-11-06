@@ -67,7 +67,7 @@ NexT.utils = {
       const box = document.createElement('div');
       element.wrap(box);
       box.classList.add('highlight-container');
-      box.insertAdjacentHTML('beforeend', '<div class="copy-btn"><i class="fa fa-clipboard fa-fw"></i></div>');
+      box.insertAdjacentHTML('beforeend', '<div class="copy-btn"><svg class="fa fa-clipboard fa-fw" data-icon="clipboard" aria-hidden="true" focusable="false"><use href="#i-clipboard" xlink:href="#i-clipboard"/></svg></div>');
       var button = element.parentNode.querySelector('.copy-btn');
       button.addEventListener('click', event => {
         var target = event.currentTarget;
@@ -86,7 +86,12 @@ NexT.utils = {
         ta.readOnly = false;
         var result = document.execCommand('copy');
         if (CONFIG.copycode.show_result) {
-          target.querySelector('i').className = result ? 'fa fa-check fa-fw' : 'fa fa-times fa-fw';
+          var icon = target.querySelector('svg[data-icon] use');
+          var next = result ? 'check' : 'times';
+          icon.setAttribute('href', '#i-' + next);
+          icon.setAttribute('xlink:href', '#i-' + next);
+          var svg = target.querySelector('svg[data-icon]');
+          svg.setAttribute('data-icon', next);
         }
         ta.blur(); // For iOS
         target.blur();
@@ -98,7 +103,11 @@ NexT.utils = {
       });
       button.addEventListener('mouseleave', event => {
         setTimeout(() => {
-          event.target.querySelector('i').className = 'fa fa-clipboard fa-fw';
+          var svg = event.target.querySelector('svg[data-icon]');
+          var use = svg.querySelector('use');
+          use.setAttribute('href', '#i-clipboard');
+          use.setAttribute('xlink:href', '#i-clipboard');
+          svg.setAttribute('data-icon', 'clipboard');
         }, 300);
       });
     });
