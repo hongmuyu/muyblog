@@ -9,6 +9,10 @@ site_url: https://zouwenxiang.cn
 display_url: https://zouwenxiang.cn
 locale: zh_Hans
 
+# 媒体文件只留在私有仓库，构建时不会同步到公开站点（避免图片绕过加密泄漏）
+media_folder: media
+public_folder: /private-media
+
 slug:
   encoding: unicode
   clean_accents: false
