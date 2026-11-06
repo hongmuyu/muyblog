@@ -60,7 +60,8 @@
 {{- next_inject('footer') }}
 
 {% if theme.busuanzi_count.enable %}
-    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    {# busuanzi 脚本由 _third-party/statistics/busuanzi-counter.swig 加载（ibruce.info 源） #}
+    {# 原 footer 硬编码的 dn-lbstatics.qbox.me 域名早已失效，已移除避免拖慢加载 #}
 
     <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
     <span class="post-meta-divider">|</span>

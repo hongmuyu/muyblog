@@ -853,10 +853,7 @@ pace:
 # JavaScript 3D library.
 # Dependencies: https://github.com/theme-next/theme-next-three
 three:
-  enable: true
-  three_waves: false
-  canvas_lines: false
-  canvas_sphere: false
+  enable: false # 三个子特效均未启用，开 true 只会白白下载 600KB 的 three.min.js
 
 # Canvas-ribbon
 # Dependencies: https://github.com/theme-next/theme-next-canvas-ribbon
