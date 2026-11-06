@@ -711,7 +711,7 @@ firestore:
 # Show Views / Visitors of the website / page with busuanzi.
 # Get more information on http://ibruce.info/2015/04/04/busuanzi
 busuanzi_count:
-  enable: true
+  enable: false # 不蒜子服务不稳定（2026-11 两次实测均挂），静态站无法自建访客统计，故撤掉页脚访问量/访客数显示
   total_visitors: true
   total_visitors_icon: fa fa-user
   total_views: true

@@ -114,3 +114,24 @@ hexo.extend.helper.register('symbolsTimeTotal', function(site, awl, wpm, minutes
   return symbolsTimeTotal(site, awl, wpm, minutesText);
 });
 
+// 本文字数：与阅读时长同口径（中文字符 + 英文单词数×平均词长），千位以上显示 k
+hexo.extend.helper.register('symbolsCount', function(post) {
+  if (!post) return '0';
+  const content = post._content || post.content || '';
+  const total = countSymbols(content);
+  return total >= 1000 ? (total / 1000).toFixed(1) + 'k' : String(total);
+});
+
+// 站点总字数：汇总全部文章，过万显示「万」，过千显示 k
+hexo.extend.helper.register('symbolsCountTotal', function(site) {
+  let posts = (site && site.posts) ? site.posts : hexo.locals.get('posts') || [];
+  if (posts && typeof posts.toArray === 'function') posts = posts.toArray();
+  let total = 0;
+  posts.forEach(post => {
+    if (post) total += countSymbols(post._content || post.content || '');
+  });
+  if (total >= 10000) return (total / 10000).toFixed(1) + '万';
+  if (total >= 1000) return (total / 1000).toFixed(1) + 'k';
+  return String(total);
+});
+

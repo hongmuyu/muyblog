@@ -142,6 +142,7 @@
               {%- if theme.symbols_count_time.item_text_post %}
                 <span class="post-meta-item-text">{{ __('symbols_count_time.count') + __('symbol.colon') }}</span>
               {%- endif %}
+              <span>{{ symbolsCount(post, config.symbols_count_time.awl) }}</span>
             </span>
           {%- endif %}
 
