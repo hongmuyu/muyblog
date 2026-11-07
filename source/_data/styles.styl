@@ -389,6 +389,9 @@ code {
   border-radius: 50%;
   background: var(--btn-bg);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  // 主题 D 可访问性修复：主题默认 opacity 0.6/0.8 会把白底灰字按钮的百分比文本
+  // 稀释到对比度 3.69（亮）/4.36（暗），取消半透明后 #666 on #fff = 5.74、#aaa on #2d2d2d = 5.94
+  opacity: 1;
   transition: all 0.3s ease;
   
   &:hover {

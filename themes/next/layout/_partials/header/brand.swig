@@ -1,6 +1,7 @@
 <div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="{{ __('accessibility.nav_toggle') }}">
+    {#- 主题 D 可访问性修复：aria-label 用于 div 需有有效 role（axe aria-prohibited-attr），补 button 语义与键盘聚焦 #}
+    <div class="toggle" role="button" tabindex="0" aria-label="{{ __('accessibility.nav_toggle') }}">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>

@@ -25,6 +25,14 @@ NexT.boot.registerEvents = function() {
     }
   });
 
+  // 主题 D 可访问性修复：.toggle 已加 role=button，补键盘激活（Enter/Space 等效点击）
+  document.querySelector('.site-nav-toggle .toggle').addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      event.currentTarget.click();
+    }
+  });
+
   var TAB_ANIMATE_DURATION = 200;
   document.querySelectorAll('.sidebar-nav li').forEach((element, index) => {
     element.addEventListener('click', event => {
