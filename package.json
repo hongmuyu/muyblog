@@ -7,7 +7,10 @@
     "purge": "node scripts/purge-css.js",
     "clean": "hexo clean",
     "server": "hexo server",
-    "admin": "hexo server -d"
+    "admin": "hexo server -d",
+    "audit": "node scripts/audit.js",
+    "budget": "node scripts/perf-budget.js",
+    "lhci": "npx --yes @lhci/cli@0.15.1 autorun"
   },
   "hexo": {
     "version": "8.1.0"

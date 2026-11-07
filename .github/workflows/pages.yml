@@ -63,6 +63,20 @@ jobs:
             exit 1
           fi
 
+      - name: Content audit
+        # 图片 alt / 死链 / H1 / heading 层级检查；只输出清单，不阻断部署
+        run: npm run audit
+
+      - name: Performance budget
+        # 首屏 JS/CSS gzip 与单图体积；只告警，不阻断部署
+        run: npm run budget
+
+      - name: Lighthouse CI
+        # ubuntu-latest 自带 Google Chrome（/usr/bin/google-chrome），lhci 的 chrome-launcher 可直接复用；
+        # 断言当前全部为 warn，观察一周后再考虑升 error。观察期不阻断部署。
+        run: npx --yes @lhci/cli@0.15.1 autorun
+        continue-on-error: true
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
