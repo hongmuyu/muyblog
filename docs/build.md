@@ -126,6 +126,7 @@ npm run lhci   # npx @lhci/cli@0.15.1 autorun
 
 ## 7. 待办 / 后续计划
 
+- **安全响应头缺失（已评估，接受现状）**：GitHub Pages 无法在仓库层配置自定义 HTTP 响应头，线上 HSTS、CSP、X-Content-Type-Options、Referrer-Policy、X-Frame-Options/frame-ancestors、Permissions-Policy 均缺失。本站为纯静态个人博客，无登录、支付或用户数据，实际风险低，暂不引入 Cloudflare 或 `<meta>` 替代方案。若日后增加登录 / 会员等功能，需重新评估（届时优先在 CDN 层统一配置）。
 - **Lighthouse CI 观察期回看**：warn 模式运行一周后，汇总各页面分数分布，再决定是否把断言升为 `error`，
   以及是否调整 LCP / TBT 阈值（CI 环境比本地慢，暂定 LCP 3000ms）。
 - **分类 description 偏短**：当前文章 tags 为空，分类页描述退回站点名。短期接受，长期在内容侧补 tags，
