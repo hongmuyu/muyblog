@@ -1,6 +1,6 @@
 {% import 'menu-item.swig' as menu_item with context %}
 
-<nav class="site-nav">
+<nav class="site-nav" id="site-nav">
 {%- if theme.menu %}
   <ul id="menu" class="main-menu menu">
     {%- for name, path in theme.menu %}
@@ -24,7 +24,8 @@
 
     {%- if theme.algolia_search.enable or theme.local_search.enable %}
       <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger">
+        {#- 主题 D（P2-11）：无 href 的 a 不可聚焦，补 tabindex + aria-label #}
+        <a role="button" tabindex="0" class="popup-trigger" aria-label="{{ __('menu.search') }}">
           {%- if theme.menu_settings.icons %}<i class="fa fa-search fa-fw"></i>{%- endif %}{{ __('menu.search') }}
         </a>
       </li>

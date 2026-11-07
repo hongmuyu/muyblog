@@ -260,10 +260,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Handle and trigger popup window
+  var popup = document.querySelector('.search-popup');
+  var overlay = document.querySelector('.search-pop-overlay');
+  var lastTrigger = null;
+
+  // 主题 D（P2-11）：模态弹层的焦点循环范围（输入框、关闭按钮、搜索结果链接等）
+  const getFocusable = () => [...popup.querySelectorAll(
+    'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+  )].filter(el => el.getClientRects().length > 0);
+
   document.querySelectorAll('.popup-trigger').forEach(element => {
+    // 主题 D（P2-11）：非原生按钮元素补 Enter/Space
+    if (window.NexT && NexT.utils) NexT.utils.bindRoleButtonKeys(element);
     element.addEventListener('click', () => {
+      lastTrigger = element;
       document.body.style.overflow = 'hidden';
-      document.querySelector('.search-pop-overlay').classList.add('search-active');
+      overlay.classList.add('search-active');
       input.focus();
       if (!isfetched) fetchData();
     });
@@ -271,8 +283,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Monitor main search box
   const onPopupClose = () => {
+    var wasActive = overlay.classList.contains('search-active');
     document.body.style.overflow = '';
-    document.querySelector('.search-pop-overlay').classList.remove('search-active');
+    overlay.classList.remove('search-active');
+    // 主题 D（P2-11）：关闭后焦点返还到触发按钮
+    if (wasActive && lastTrigger && lastTrigger.getClientRects().length > 0) {
+      lastTrigger.focus();
+    }
   };
 
   document.querySelector('.search-pop-overlay').addEventListener('click', event => {
@@ -285,6 +302,27 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('keyup', event => {
     if (event.key === 'Escape') {
       onPopupClose();
+    }
+  });
+
+  // 主题 D（P2-11）：aria-modal 配套的焦点循环（Tab/Shift+Tab 在弹层内循环）
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Tab' || !overlay.classList.contains('search-active')) return;
+    const items = getFocusable();
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement;
+
+    if (!popup.contains(active)) {
+      event.preventDefault();
+      first.focus();
+    } else if (event.shiftKey && active === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
     }
   });
 });

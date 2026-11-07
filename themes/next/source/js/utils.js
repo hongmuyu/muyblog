@@ -9,6 +9,21 @@ HTMLElement.prototype.wrap = function(wrapper) {
 NexT.utils = {
 
   /**
+   * 主题 D（P2-11）：div/a 等非原生按钮元素补 Enter/Space 等效 click。
+   * 已绑定过的元素跳过（幂等），供汉堡菜单、搜索触发器、返回顶部共用。
+   */
+  bindRoleButtonKeys: function(element) {
+    if (!element || element.dataset.roleButtonBound) return;
+    element.dataset.roleButtonBound = 'true';
+    element.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        element.click();
+      }
+    });
+  },
+
+  /**
    * Wrap images with fancybox.
    */
   wrapImageWithFancyBox: function() {
@@ -68,7 +83,8 @@ NexT.utils = {
       const box = document.createElement('div');
       element.wrap(box);
       box.classList.add('highlight-container');
-      box.insertAdjacentHTML('beforeend', '<div class="copy-btn"><svg class="fa fa-clipboard fa-fw" data-icon="clipboard" aria-hidden="true" focusable="false"><use href="#i-clipboard" xlink:href="#i-clipboard"/></svg></div>');
+      // 主题 D（P2-11）：改用原生 button，自带键盘与语义支持
+      box.insertAdjacentHTML('beforeend', '<button type="button" class="copy-btn" aria-label="复制代码"><svg class="fa fa-clipboard fa-fw" data-icon="clipboard" aria-hidden="true" focusable="false"><use href="#i-clipboard" xlink:href="#i-clipboard"/></svg></button>');
       var button = element.parentNode.querySelector('.copy-btn');
       button.addEventListener('click', event => {
         var target = event.currentTarget;
@@ -94,13 +110,20 @@ NexT.utils = {
           var svg = target.querySelector('svg[data-icon]');
           svg.setAttribute('data-icon', next);
         }
+        // 主题 D（P2-11）：无障碍名称同步复制结果，2 秒后复原
+        target.setAttribute('aria-label', result ? '已复制' : '复制失败');
+        clearTimeout(target._copyLabelTimer);
+        target._copyLabelTimer = setTimeout(() => {
+          target.setAttribute('aria-label', '复制代码');
+        }, 2000);
         ta.blur(); // For iOS
-        target.blur();
         if (selected) {
           selection.removeAllRanges();
           selection.addRange(selected);
         }
         document.body.removeChild(ta);
+        // 主题 D（P2-11）：删除临时 textarea 后把焦点交还按钮，键盘用户位置不丢失
+        target.focus();
       });
       button.addEventListener('mouseleave', event => {
         setTimeout(() => {
@@ -174,6 +197,8 @@ NexT.utils = {
       }
     });
 
+    // 主题 D（P2-11）：div[role=button] 需支持 Enter/Space
+    NexT.utils.bindRoleButtonKeys(backToTop);
     backToTop && backToTop.addEventListener('click', () => {
       window.anime({
         targets  : document.scrollingElement,

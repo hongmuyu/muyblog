@@ -1036,27 +1036,40 @@ figure.highlight .table-container::after
     color: #fff
 
 // 全局统一 :focus-visible 焦点样式
-:focus-visible
+// 必须带 body 前缀：PurgeCSS 会把纯伪类选择器（不含标签/类名）判定为未使用而删除
+body :focus-visible
   outline: 2px solid #4d9fff
   outline-offset: 2px
 
-// 暗色模式下焦点框保持可见
+// 表格容器 / 返回顶部 / 复制按钮 / 搜索输入框聚焦样式
+// 主题内这些选择器各自带有 outline: 0 或更高优先级，需显式写全描边并提高权重；
+// 搜索输入框主题规则为 .search-popup input.search-input，权重更高故多带一层 .search-popup
+.table-container:focus-visible,
+.back-to-top:focus-visible,
+.copy-btn:focus-visible,
+.popup-btn-close:focus-visible,
+.search-popup input.search-input:focus-visible
+  outline: 2px solid #4d9fff
+  outline-offset: 2px
+
+// 暗色模式下焦点框保持可见（选择器与上方逐一对应，保证同权重覆盖）
 @media (prefers-color-scheme: dark)
-  :focus-visible
+  body :focus-visible
+    outline-color: #7ab8ff
+  .table-container:focus-visible,
+  .back-to-top:focus-visible,
+  .copy-btn:focus-visible,
+  .popup-btn-close:focus-visible,
+  .search-popup input.search-input:focus-visible
     outline-color: #7ab8ff
 
-// 表格容器聚焦样式
-.table-container:focus-visible
-  outline: 2px solid #4d9fff
-  outline-offset: 2px
-
-// 返回顶部按钮聚焦样式
-.back-to-top:focus-visible
-  outline: 2px solid #4d9fff
-  outline-offset: 2px
-
-// 复制按钮聚焦样式
-.copy-btn:focus-visible
-  outline: 2px solid #4d9fff
-  outline-offset: 2px
+// ============================================
+// 主题 D（P2-11）：复制按钮 / 搜索关闭按钮改为原生 <button>
+// 重置浏览器默认外观，避免边框与灰底破坏原有视觉
+// ============================================
+.copy-btn,
+.popup-btn-close
+  background: transparent
+  border: 0
+  font-family: inherit
 

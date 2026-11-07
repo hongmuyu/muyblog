@@ -1,7 +1,8 @@
 <div class="site-brand-container">
   <div class="site-nav-toggle">
     {#- 主题 D 可访问性修复：aria-label 用于 div 需有有效 role（axe aria-prohibited-attr），补 button 语义与键盘聚焦 #}
-    <div class="toggle" role="button" tabindex="0" aria-label="{{ __('accessibility.nav_toggle') }}">
+    {#- 主题 D（P2-11）：补 aria-expanded / aria-controls 表达移动端菜单展开状态 #}
+    <div class="toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="site-nav" aria-label="{{ __('accessibility.nav_toggle') }}">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -38,7 +39,8 @@
   </div>
 
   <div class="site-nav-right">
-    <div class="toggle popup-trigger">
+    {#- 主题 D（P2-11）：搜索触发器补 button 语义，可与键盘操作 #}
+    <div class="toggle popup-trigger" role="button" tabindex="0" aria-label="{{ __('menu.search') }}">
       {%- if theme.algolia_search.enable or theme.local_search.enable %}
         <i class="fa fa-search fa-fw fa-lg"></i>
       {%- endif %}
