@@ -127,5 +127,7 @@
 - `scripts/seo-description.js`（新建）：`before_generate` 为无 front-matter description 的公开文章从正文首段提取纯文本（去图片/代码块/标题/引用/列表/表格，句末标点自然断句，120–160 字），写入 `post.seo_description`；`template_locals` 为首页/分类页/归档页生成模板描述。私密文章通过 `hexo.secret_is` 跳过。
 - `themes/next/layout/_partials/head/head-unique.swig`：`open_graph()` 改为 `open_graph({ description: page.seo_description })`，未设置时回退到原链路（front-matter description / excerpt / 站点 description）。
 - `source/admin/config.yml`：description 字段补 hint，说明选填与建议长度。
-- 待核对（未实施）：文章数量超过一页后，核对 NexT 默认分页 `<nav class="pagination">` 是否带 `aria-label`，缺失则补「分页导航」。
+
+### 待核对（未实施）
+- 分页（P2-11 遗留）：文章数量超过一页后，核对 NexT 默认分页 `<nav class="pagination">` 是否带 `aria-label`，缺失则补「分页导航」。
 
