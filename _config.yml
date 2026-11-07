@@ -211,14 +211,6 @@ sitemap:
 baidusitemap:
   path: baidusitemap.xml
 
-# 文章加密（hexo-blog-encrypt）
-# 用法：在文章 front-matter 中添加
-#   password: 你的密码
-#   abstract: 列表页里显示的提示文字（可省略）
-#   message:  文章页密码输入框的提示语（可省略）
-encrypt:
-  enable: true
-
 # 私密分类：归入「私密」分类的文章自动标记 hidden，全站隐藏（首页/归档/标签/搜索/RSS/sitemap），
 # 仅可通过 /secret/ 密码门访问。依赖 hexo-hide-posts 插件与 scripts/secret-category.js
 hide_posts:
