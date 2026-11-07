@@ -38,3 +38,10 @@
 - `scripts/replace-fa.js`：构建期把 `<i class="fa...">` 替换为内联 SVG + sprite。
 - `data/fa-icons.json`：48 个图标 + 3 社交图标的 SVG path 数据。
 - `source/_data/styles.styl`：SVG 辅助类（fa-fw/fa-lg/fa-5x/fa-pulse）换算。
+
+## 8. `themes/next/source/css/_variables/base.styl`
+- **原因**：B-4 字体策略——移除 Google Fonts/Lato，改用系统字体栈。注意 `font.enable: false` 只停掉 `<link>`，Lato 仍会被 `get_font_family('global')` 拼进 `font-family` 声明。
+- **改法**：新增 `$font-family-system = -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif`，`$font-family-base` 改为直接使用该栈；`$font-family-chinese` 追加 `"Noto Sans CJK SC"`（供等宽字体 CJK 回退）。
+
+## 9. `themes/next/_config.yml`
+- **原因**：同上，`font.global.family: Lato` 清空（`enable: false` 保持不变）。

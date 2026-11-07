@@ -423,7 +423,7 @@ font:
   # Global font settings used for all elements inside <body>.
   global:
     external: true
-    family: Lato
+    family:    # 本地修改（B-4）：清空 Lato，使用系统字体栈（见 css/_variables/base.styl）
     size:
 
   # Font settings for site title (.site-title).

@@ -69,10 +69,13 @@ get_font_family(config) {
 }
 
 // Font families.
-$font-family-chinese      = "PingFang SC", "Microsoft YaHei";
+// 本地修改（B-4 字体策略）：改用系统字体栈，不加载任何外部字体
+// 中文回退保留 PingFang SC / Microsoft YaHei / Noto Sans CJK SC
+$font-family-system       = -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+$font-family-chinese      = "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC";
 
-$font-family-base         = $font-family-chinese, sans-serif;
-$font-family-base         = get_font_family('global'), $font-family-chinese, sans-serif if get_font_family('global');
+$font-family-base         = $font-family-system;
+$font-family-base         = get_font_family('global'), $font-family-system if get_font_family('global');
 
 $font-family-logo         = $font-family-base;
 $font-family-logo         = get_font_family('title'), $font-family-base if get_font_family('title');
