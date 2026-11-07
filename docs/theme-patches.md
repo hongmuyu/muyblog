@@ -108,10 +108,7 @@
 ### 配套（非主题源码）
 - `scripts/a11y-fixes.js`（新建）：构建期 after_render:html 修复——任务清单 disabled checkbox 补 `aria-label="已完成/未完成"`；正文 `<table>` 包 `.table-container`（tabindex=0 + role=group + aria-label）；`<th>` 补 `scope="col"`。
 - `source/_data/styles.styl`：行内 code `#ff7600 → #b85500`；暗色组（post-meta/caption/footer `#9b9b9b`、链接 `#30a5da` + 下划线、TOC `#fc7035`）；skip-link 样式；全局 `:focus-visible` 蓝色描边（亮 `#4d9fff` / 暗 `#7ab8ff`）及 `.table-container/.back-to-top/.copy-btn` 焦点样式；`.back-to-top { opacity: 1 }`（主题默认 0.6/0.8 会把按钮内灰字稀释到 3.69/4.36，取消半透明后 5.74/5.94）。
-- **焦点描边规则的两个关键点（主题升级/改样式时勿丢）**：
-  1. 全局规则写作 `body :focus-visible`，不能写纯 `:focus-visible`。PurgeCSS（`scripts/purge-css.js`）会把不含标签/类名的纯伪类选择器判为未使用并删除，导致线上完全没有自定义焦点色；加 `body` 前缀后选择器含标签名，可正常保留。同时已在 `purge-css.js` 的 `safelist.standard` 显式加入 `:hover/:focus/:active/:focus-visible/:focus-within/::selection/::placeholder` 等纯伪类（双保险：即使未来有人写回纯伪类规则也不会被误删）。
-  2. 搜索输入框必须用 `.search-popup input.search-input:focus-visible`。主题 `search.styl` 的 `.search-popup input.search-input { outline: 0 }` 权重 (0,2,1) 高于普通类选择器，若只用 `.search-input:focus-visible` 会被压掉、输入框聚焦无描边。暗色覆盖块内需逐一列出同名选择器才能同权重覆盖颜色。同类高权重 `outline: 0` 还有主题 tabs 链接与私密入口 `.secret-input:focus`，已分别用 `.tabs ... a:focus-visible` 与 `.secret-input:focus-visible` 补齐。
-- **暗色 TOC 激活色（`#fc7035 !important`）**：位置 `source/_data/styles.styl` 的 `@media (prefers-color-scheme: dark)` 块内，作用于 `.sidebar-nav-active, .post-toc .nav .active > a, .post-toc .nav .active-current > a`。原因：主题侧栏/TOC 激活色 `#fc6423`（亮色已改 `#c74f1c`）在暗色 `#333` 底上约 4.20，需提亮到 `#fc7035`（4.52）才满足 AA；`!important` 是因为 NexT 主题在 `sidebar-toc.styl` 用 `.post-toc .nav .active > a` 的同等权重规则 + 主题自身也有 `!important`，不加强制标记会被主题覆盖。主题升级时若改用 CSS 变量或调整该选择器，需要重新核对这条覆盖是否仍然命中。
+- **样式易丢失规则**：焦点描边、暗色 TOC 覆盖等已统一归档到「12. 构建期样式坑位统一归档」，主题升级后按该节逐项复查。
 
 ### P2-11（ARIA 完善）主题源码改动
 - `themes/next/layout/_partials/header/menu.swig`：`<nav class="site-nav">` 加 `id="site-nav"`（供汉堡按钮 `aria-controls`）；搜索菜单项 `<a role="button">` 补 `tabindex="0"` 与 `aria-label`（无 href 的 a 本身不可聚焦）。
@@ -140,5 +137,56 @@
 ### 关于页重复 h1（非主题源码）
 - **原因**：`source/about/index.md` 正文里的 `# 你好，我是木与宁` 会与主题渲染的页面标题 h1（「关于」）重复。
 - **改法**：正文标题降为 `##`；`source/_data/styles.styl` 的 `.about-hero h1` 选择器改为 `.about-hero h2`。
+
+### `themes/next/layout/_macro/post.swig`：补 `#more` 锚点
+- **原因**：主题第 200 行的「阅读全文」固定链接到 `{{ post.path }}#more`，但 Hexo 只在源码含 `<!-- more -->` 时生成 `<span id="more">`；本站 `scripts/auto-excerpt.js` 只写 `data.excerpt`（纯文本），不动正文，因此自动摘要文章的文章页没有该锚点。
+- **改法**：文章页正文分支（`{% else %}`，即非首页列表）在 `<div class="post-body">` 内、`{{ post.content }}` 之前插入 `<span id="more"></span>`；条件为 `page.layout === 'post'` 且正文不含 `id="more"` / `id='more'`，避免手动 `<!-- more -->` 时重复 id。
+
+### `themes/next/layout/_macro/post.swig`：私密分类/标签链接降级
+- **原因**：私密文章的「分类于」「标签」由主题自动渲染成 `<a href="{{ cat.path }}">`，但私密分类/标签没有任何公开文章，对应页面不生成，形成死链。
+- **改法**：
+  - `scripts/secret-category.js` 注册 helper `has_public_posts(entry)`：分类/标签下至少有一篇「非隐藏且非私密」文章才返回 true（同时覆盖「公开文章属于只含私密文章的分类」这一边界）。
+  - 模板按该 helper 分支：true 保持 `<a>`；false 改为纯文本 `<span>`（无 `role`/`tabindex`，屏幕阅读器不会读成链接）。
+  - `source/_data/styles.styl` 增加 `.post-tags span`，样式与链接标签保持一致。
+  - 私密文章自身仍算「隐藏」，因此其分类/标签自动落入纯文本分支，无需额外判断当前文章是否私密。
+
+## 12. 构建期样式坑位统一归档（2026-11）
+
+主题升级或调整构建流程后，先按本节逐项复查。
+
+### 12.1 PurgeCSS 纯伪类误删
+
+- **现象**：写在 `source/_data/styles.styl` 的全局 `:focus-visible` 规则在线上完全不存在，键盘聚焦无描边，但本地开发（不跑 PurgeCSS）正常。
+- **原因**：PurgeCSS 内置只保护 `*`、`:root`、`:after`、`:before` 四个纯伪类；单独成规则的 `:focus-visible`、`:hover` 等会被判为「未使用」整条删除。
+- **双保险**：
+  1. `scripts/purge-css.js` 的 `safelist.standard` 显式列出 `:hover/:focus/:active/:focus-visible/:focus-within/::selection/::placeholder` 等纯伪类；
+  2. 实际规则仍写元素前缀（`body :focus-visible`），即使 safelist 失效也不会被删。
+- **注意**：PurgeCSS 还会从逗号选择器列表中单独删掉某个选择器，所以 `body :focus-visible` 与具体组件选择器要拆成两条独立规则，不要写在同一组逗号列表里。
+- **升级复查**：`npm run purge` 后检查 `public/css/main.css` 是否仍含 `:focus-visible` 规则，并用键盘 Tab 实测焦点框。
+
+### 12.2 `outline: 0` 清单（6 处逐一评估）
+
+| # | 位置 | 选择器 | 评估与处理 |
+|---|---|---|---|
+| 1 | `themes/next/source/css/_common/scaffolding/base.styl` | `a, span.exturl` | 全站链接的 outline 归零；被 `body :focus-visible`（权重更高）正常覆盖，无需改动 |
+| 2 | `themes/next/source/css/_common/components/third-party/search.styl` | `.search-popup input.search-input` | 权重 (0,2,1) 压过普通类规则，聚焦无描边；已用 `.search-popup input.search-input:focus-visible` 覆盖 |
+| 3 | `themes/next/source/css/_common/scaffolding/tags/tabs.styl` | tabs 内 `a` | 文章内 tabs 链接聚焦无描边；已补 `.post-body .tabs ul.nav-tabs li.tab a:focus-visible` 与 `.tabs-comment ...` |
+| 4 | `themes/next/source/css/_common/components/post/post-reward.styl` | 打赏按钮 | `reward_settings.enable: false`，产物不渲染，无影响 |
+| 5 | `source/_data/styles.styl` | `.local-search-popup .local-search-input-wrapper input:focus` | NexT 实际弹层是 `.search-popup`，该样式为历史遗留、无页面使用，保持原样 |
+| 6 | `source/_data/styles.styl` | `.secret-input:focus` | 私密入口输入框聚焦无描边；已补 `.secret-input:focus-visible`（同权重、写在文件末尾靠后覆盖） |
+
+### 12.3 暗色 `!important` 覆盖（TOC 激活色）
+
+- **位置**：`source/_data/styles.styl` 的 `@media (prefers-color-scheme: dark)` 块内。
+- **对象**：`.sidebar-nav-active, .post-toc .nav .active > a, .post-toc .nav .active-current > a`。
+- **原因**：主题侧栏/TOC 激活色 `#fc6423`（亮色已改 `#c74f1c`）在暗色 `#333` 底上对比度约 4.20，不满足 AA；提亮到 `#fc7035`（约 4.52）。主题自身对同选择器已有 `!important`，不加强制标记会被覆盖。
+- **升级复查**：主题若改用 CSS 变量或调整该选择器结构，需要重新核对覆盖是否命中，并在暗色模式下跑 axe / Lighthouse 确认对比度仍达标。
+
+### 12.4 PurgeCSS 拆分为独立脚本
+
+- **原因**：Hexo 的 `after_generate` 钩子早于物理写文件，全新 checkout 首次构建时 `public/css/main.css` 还不存在，清理会被跳过，CI 上线的是未压缩 CSS。主题升级后若把清理重新挂回 Hexo 钩子，这个坑会复现。
+- **现状**：`scripts/purge-css.js` 是独立脚本，`npm run purge` 在 `hexo generate` 之后、上传产物之前执行；不要依赖钩子时机。
+- **升级/改流程复查**：构建步骤必须保持「generate → purge → 质量检查 → upload」的顺序；PurgeCSS 体积异常偏大时，先确认 purge 是否真的执行过。
+
 
 
