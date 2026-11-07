@@ -116,6 +116,7 @@ npm run lhci   # npx @lhci/cli@0.15.1 autorun
 |---|---|---|
 | `scripts/auto-webp.js` | Hexo 钩子 | 构建期生成 WebP、改写正文图片引用 |
 | `scripts/img-dimensions.js` | Hexo 钩子 | 为本地图片注入 width/height，减少 CLS |
+| `scripts/feed-images.js` | Hexo 钩子 | 把 RSS/Atom 中的 `data-src` 还原为绝对地址 `src`，修复订阅源图片不显示 |
 | `scripts/purge-css.js` | 独立脚本 | 产物 CSS 清理（`npm run purge`） |
 | `scripts/audit.js` | 独立脚本 | 内容审计（`npm run audit`） |
 | `scripts/perf-budget.js` | 独立脚本 | 性能预算（`npm run budget`） |

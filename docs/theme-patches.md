@@ -193,5 +193,15 @@
 - **现状**：`scripts/purge-css.js` 是独立脚本，`npm run purge` 在 `hexo generate` 之后、上传产物之前执行；不要依赖钩子时机。
 - **升级/改流程复查**：构建步骤必须保持「generate → purge → 质量检查 → upload」的顺序；PurgeCSS 体积异常偏大时，先确认 purge 是否真的执行过。
 
+## 13. RSS 图片懒加载属性修复（构建期脚本，2026-11）
+
+- **关联主题改动**：`themes/next/scripts/filters/post.js` 的 `after_post_render` 把正文 `<img src=` 改为 `data-src=` 供 lozad 懒加载。该过滤同时影响 `post.content`，而 `hexo-generator-feed` 直接复用同一份 `post.content` 生成 `atom.xml`，导致 RSS 阅读器（不执行 JS）看不到任何图片。
+- **新增脚本**：`scripts/feed-images.js`，注册 `after_generate` 过滤器。
+  - 读取 `hexo.route.get(feed.path)` 拿到的**已生成 feed XML 副本**，把 `<img data-src>` 还原为 `src`，相对路径用 `hexo-util` 的 `full_url_for` 补成绝对地址。
+  - **只改 feed 路由数据，不触碰 `post.content`**；文章页仍保留 `data-src`，lozad 懒加载不受影响。
+  - 通过 `hexo.route.set()` 写回，`after_generate` 早于物理落盘，所以最终写入的 `public/atom.xml` 即修复版（与 12.4 对时序的说明一致）。
+- **注意**：`hexo-generator-feed` v4 本身没有 `feed:post` 过滤器钩子，因此不能按钩子方式实现；若日后升级该插件并新增钩子，可改为更精细的 feed 上下文处理。
+- **验证**：`public/atom.xml` 中 `<img>` 全部为绝对地址 `src`（无 `data-src`），XML 可被标准解析器解析；文章页 `<img>` 仍为 `data-src`。
+
 
 
