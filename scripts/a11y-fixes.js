@@ -62,5 +62,11 @@ hexo.extend.filter.register('after_render:html', function a11yFixes(str) {
   result += str.slice(cursor);
   str = result;
 
+  // 3) <th> -> scope="col"（避免匹配 thead/th 前缀）
+  str = str.replace(/<th(\s[^>]*)?>/g, (match, attrs) => {
+    if (attrs && /scope=/.test(attrs)) return match;
+    return `<th scope="col"${attrs || ''}>`;
+  });
+
   return str;
 });
