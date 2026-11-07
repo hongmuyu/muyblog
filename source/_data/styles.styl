@@ -942,7 +942,7 @@ figure.highlight .table-container > table
   align-items: center
   justify-content: center
   pointer-events: none
-  opacity: 0
+  opacity: 1
   font-size: 16px
   font-weight: 600
   line-height: 1
@@ -954,6 +954,13 @@ figure.highlight .table-container > table
 figure.highlight .table-container::after
   background: linear-gradient(to right, transparent, #f7f7f7 55%)
 
+// 默认常驻显示（上方 opacity:1）：不支持 scroll-state 的浏览器（Safari/Firefox）
+// 无法精确判断右侧是否还有内容，用常驻提示兜底（箭头 pointer-events:none，不挡操作）。
+@supports (container-type: scroll-state)
+  .table-container::after
+    opacity: 0
+
+// 支持的浏览器：仅右侧还有内容时显示，滚到底自动消失
 @container scroll-state(scrollable: inline-end)
   .table-container::after
     opacity: 1
