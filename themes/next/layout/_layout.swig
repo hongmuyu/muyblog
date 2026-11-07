@@ -10,6 +10,7 @@
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
+  <a class="skip-link" href="#main">跳到主内容</a>
   <div class="container{%- if theme.motion.enable %} use-motion{%- endif %}">
     <div class="headband"></div>
 
@@ -19,7 +20,7 @@
 
     {{ partial('_partials/widgets.swig', {}, {cache: theme.cache.enable}) }}
 
-    <main class="main">
+    <main class="main" id="main">
       <div class="main-inner">
         <div class="content-wrap">
           {% include '_partials/header/sub-menu.swig' %}

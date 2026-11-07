@@ -1011,3 +1011,49 @@ figure.highlight .table-container::after
   // 主题 D 可访问性修复：暗色下页脚 #6b6b6b 在 #282828 上仅 2.76，提亮到 #9b9b9b（5.30:1）
   .footer
     color: #9b9b9b
+
+// ============================================
+// 主题 D 可访问性修复（P1-8）
+// ============================================
+
+// skip link：默认隐藏，聚焦时显示
+.skip-link
+  position: absolute
+  top: -40px
+  left: 0
+  background: #000
+  color: #fff
+  padding: 8px 16px
+  z-index: 10001
+  text-decoration: none
+  transition: top 0.2s ease
+
+  &:focus
+    top: 0
+    color: #fff
+
+// 全局统一 :focus-visible 焦点样式
+:focus-visible
+  outline: 2px solid #4d9fff
+  outline-offset: 2px
+
+// 暗色模式下焦点框保持可见
+@media (prefers-color-scheme: dark)
+  :focus-visible
+    outline-color: #7ab8ff
+
+// 表格容器聚焦样式
+.table-container:focus-visible
+  outline: 2px solid #4d9fff
+  outline-offset: 2px
+
+// 返回顶部按钮聚焦样式
+.back-to-top:focus-visible
+  outline: 2px solid #4d9fff
+  outline-offset: 2px
+
+// 复制按钮聚焦样式
+.copy-btn:focus-visible
+  outline: 2px solid #4d9fff
+  outline-offset: 2px
+
