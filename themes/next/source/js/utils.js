@@ -26,7 +26,8 @@ NexT.utils = {
 
       var imageTitle = $image.attr('title') || $image.attr('alt');
       if (imageTitle) {
-        $imageWrapLink.append(`<p class="image-caption">${imageTitle}</p>`);
+        // 图片说明与 img alt 重复，对屏幕阅读器隐藏避免冗余朗读
+        $imageWrapLink.append(`<p class="image-caption" aria-hidden="true">${imageTitle}</p>`);
         // Make sure img title tag will show correctly in fancybox
         $imageWrapLink.attr('title', imageTitle).attr('data-caption', imageTitle);
       }
