@@ -22,10 +22,11 @@
 
   .sidebar-nav-active {
     border-bottom-color: $sidebar-highlight;
-    color: $sidebar-highlight;
+    // 主题 D 可访问性修复：#fc6423 在白底上对比度仅 3.0，加深到 #c74f1c（4.60:1）
+    color: #c74f1c;
 
     &:hover {
-      color: $sidebar-highlight;
+      color: #c74f1c;
     }
   }
 }

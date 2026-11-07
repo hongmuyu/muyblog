@@ -12,7 +12,8 @@
   }
 
   .image-caption, .figure .caption {
-    color: $grey-dark;
+    // 主题 D 可访问性修复：#999 在白底上对比度仅 2.84，加深到 #767676（4.54:1）
+    color: #767676;
     font-size: $font-size-small;
     font-weight: bold;
     line-height: 1;
