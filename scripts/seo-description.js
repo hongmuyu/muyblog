@@ -94,6 +94,47 @@ function buildFromContent(html) {
   return cutNaturally(text);
 }
 
+const isSecretPost = post => typeof hexo.secret_is === 'function' && hexo.secret_is(post);
+
+function toArray(query) {
+  if (!query) return [];
+  if (typeof query.toArray === 'function') return query.toArray();
+  return Array.from(query);
+}
+
+// 归档页：数量 + 年份跨度 + 最新文章标题
+function buildArchiveDesc(posts, siteTitle) {
+  const list = toArray(posts).filter(p => p && !isSecretPost(p));
+  if (!list.length) return `归档 - 共 0 篇文章 - ${siteTitle}`;
+
+  const sorted = [...list].sort((a, b) => b.date.valueOf() - a.date.valueOf());
+  const newest = sorted[0].date.format('YYYY');
+  const oldest = sorted[sorted.length - 1].date.format('YYYY');
+  const range = newest === oldest ? `${newest} 年` : `${oldest} 至 ${newest} 年`;
+  return `共 ${list.length} 篇文章，覆盖 ${range}，最新为「${sorted[0].title}」。`;
+}
+
+// 分类页：优先分类自身描述；否则用前 3 个高频标签概括主题
+function buildCategoryDesc(category, posts, siteTitle) {
+  if (category && category.description) return category.description;
+
+  const name = category ? category.name : '';
+  const list = toArray(posts).filter(p => p && !isSecretPost(p));
+  const counts = new Map();
+  list.forEach(post => {
+    toArray(post.tags).forEach(tag => {
+      counts.set(tag.name, (counts.get(tag.name) || 0) + 1);
+    });
+  });
+  const top = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([tagName]) => tagName);
+  // 分类下文章暂无标签时退回站点名，避免描述过短
+  const tail = top.length ? `，涵盖 ${top.join('、')} 等主题` : ` - ${siteTitle}`;
+  return `「${name}」分类下共 ${list.length} 篇文章${tail}。`;
+}
+
 // 文章页：仅处理 front-matter 无 description 的公开文章
 hexo.extend.filter.register('before_generate', function () {
   const posts = hexo.locals.get('posts');
@@ -123,12 +164,13 @@ hexo.extend.filter.register('template_locals', function (locals) {
     page.seo_description = HOME_DESC;
   } else if (path.startsWith('archives/')) {
     // 归档总览与按年/月归档
-    const n = page.posts ? page.posts.length : 0;
-    page.seo_description = `归档 - 共 ${n} 篇文章 - ${siteTitle}`;
+    page.seo_description = buildArchiveDesc(page.posts, siteTitle);
   } else if (page.category) {
-    // 单个分类页
-    const n = page.posts ? page.posts.length : 0;
-    page.seo_description = `${page.category} - 该分类下 ${n} 篇文章 - ${siteTitle}`;
+    // 单个分类页：分类自身描述优先，否则按标签概括
+    const category = locals.site && locals.site.categories
+      ? locals.site.categories.findOne({ name: page.category })
+      : null;
+    page.seo_description = buildCategoryDesc(category, page.posts, siteTitle);
   } else if (path === 'categories/index.html') {
     // 分类总览页
     const siteCats = locals.site && locals.site.categories;
