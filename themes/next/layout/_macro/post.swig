@@ -89,7 +89,12 @@
               <span class="post-meta-item-text">{{ __('post.in') }}</span>
               {%- for cat in post.categories.toArray() %}
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="{{ url_for(cat.path) }}" itemprop="url" rel="index"><span itemprop="name">{{ cat.name }}</span></a>
+                  {%- if has_public_posts(cat) %}
+                    <a href="{{ url_for(cat.path) }}" itemprop="url" rel="index"><span itemprop="name">{{ cat.name }}</span></a>
+                  {%- else %}
+                    {# 该分类下没有公开文章时不生成分类页，仅渲染纯文本避免死链 #}
+                    <span itemprop="name">{{ cat.name }}</span>
+                  {%- endif %}
                 </span>
 
                 {%- set cat_length = post.categories.length %}
@@ -207,6 +212,10 @@
           {{ post.content }}
         {%- endif %}
       {% else %}
+        {# “阅读全文”链接指向 #more：仅文章页插入锚点；源码含 <!-- more --> 时正文已有 <span id="more">，避免重复 #}
+        {%- if page.layout === 'post' and not ('id="more"' in post.content) and not ("id='more'" in post.content) %}
+          <span id="more"></span>
+        {%- endif %}
         {{ post.content }}
       {%- endif %}
     </div>
@@ -247,7 +256,12 @@
           {%- endif %}
           <div class="post-tags">
             {%- for tag in post.tags.toArray() %}
-              <a href="{{ url_for(tag.path) }}" rel="tag">{{ tag_indicate }} {{ tag.name }}</a>
+              {%- if has_public_posts(tag) %}
+                <a href="{{ url_for(tag.path) }}" rel="tag">{{ tag_indicate }} {{ tag.name }}</a>
+              {%- else %}
+                {# 该标签下没有公开文章时不生成标签页，仅渲染纯文本避免死链 #}
+                <span>{{ tag_indicate }} {{ tag.name }}</span>
+              {%- endif %}
             {%- endfor %}
           </div>
         {%- endif %}

@@ -110,6 +110,18 @@ hexo.extend.filter.register('template_locals', function (locals) {
   return locals;
 });
 
+// 模板 helper：分类/标签是否还有公开文章（决定其页面是否存在）
+// 私密文章所在的分类、以及「只含私密文章（或被 hide-posts 隐藏）」的分类/标签都不生成页面，
+// 模板据此把链接降级为纯文本，避免 /categories/私密/、/tags/测试/ 这类死链
+hexo.extend.helper.register('has_public_posts', function (entry) {
+  if (!entry || !entry.posts || typeof entry.posts.each !== 'function') return false;
+  let ok = false;
+  entry.posts.each(p => {
+    if (p && !p.hidden && !hexo.secret_is(p)) ok = true;
+  });
+  return ok;
+});
+
 // 私密入口页生成器（生成器名 secret-page 必须与 hide_posts.allowlist_generators 一致，
 // 才能拿到全量文章——生成器收到的 locals.posts 由 hide-posts 包装注入）
 hexo.extend.generator.register('secret-page', function (locals) {

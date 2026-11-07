@@ -895,6 +895,14 @@ img {
   padding-top: 8px
   padding-bottom: 8px
 
+// 私密文章的分类/标签页不生成，模板把链接降级为纯文本，样式与链接保持一致
+.post-tags span
+  display: inline-block
+  font-size: 0.8125em
+
+  &:not(:last-child)
+    margin-right: 10px
+
 // ============================================
 // C-1 悬浮按钮完善（#8）：触控 ≥44px，不遮挡正文，暗色可见
 // ============================================
