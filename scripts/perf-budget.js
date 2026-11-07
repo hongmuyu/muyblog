@@ -4,8 +4,8 @@
  * 主题 E-1：性能预算检查。
  *
  * 构建后用 `node scripts/perf-budget.js` 检查 public/ 产物：
- * - 首屏 JS（首页引用的全部 <script src>）gzip 后 ≤200KB
- * - 首屏 CSS（首页引用的全部 <link rel="stylesheet">）gzip 后 ≤80KB
+ * - 首屏 JS（首页引用的全部 <script src>）gzip 后 ≤100KB
+ * - 首屏 CSS（首页引用的全部 <link rel="stylesheet">）gzip 后 ≤40KB
  * - 单张图片 ≤200KB，文章图（public/images/ 下）超标单独列出，不阻断
  *
  * 只告警、不阻断构建（先观察）。被 Hexo 作为 scripts/ 插件加载时不执行。
@@ -19,8 +19,8 @@ const ROOT = path.join(__dirname, '..');
 const PUBLIC = path.join(ROOT, 'public');
 
 const BUDGETS = {
-  jsGzip: 200 * 1024,
-  cssGzip: 80 * 1024,
+  jsGzip: 100 * 1024,
+  cssGzip: 40 * 1024,
   image: 200 * 1024
 };
 
