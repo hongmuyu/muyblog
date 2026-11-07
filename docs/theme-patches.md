@@ -131,3 +131,14 @@
 ### 待核对（未实施）
 - 分页（P2-11 遗留）：文章数量超过一页后，核对 NexT 默认分页 `<nav class="pagination">` 是否带 `aria-label`，缺失则补「分页导航」。
 
+## 11. 主题 E-1：内容审计修复（2026-11）
+
+### `themes/next/layout/charts.swig`
+- **原因**：`/charts/` 页面的三个小节标题原为 `<h3>`，页面标题是 `<h1>`，形成 h1 → h3 跳级（axe heading-order）。
+- **改法**：三个 `<h3>`（分类分布、标签 Top 10、年度发文）统一改为 `<h2>`。配套 `source/_data/styles.styl` 的 `.chart-section h3` 选择器同步改为 `h2`。
+
+### 关于页重复 h1（非主题源码）
+- **原因**：`source/about/index.md` 正文里的 `# 你好，我是木与宁` 会与主题渲染的页面标题 h1（「关于」）重复。
+- **改法**：正文标题降为 `##`；`source/_data/styles.styl` 的 `.about-hero h1` 选择器改为 `.about-hero h2`。
+
+

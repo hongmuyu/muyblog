@@ -9,7 +9,7 @@ comments: false
 
 ![头像](/images/avatar.png)
 
-# 你好，我是木与宁
+## 你好，我是木与宁
 
 > 选择有时候比努力更重要
 
