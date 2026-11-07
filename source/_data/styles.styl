@@ -988,6 +988,15 @@ figure.highlight .table-container::after
     td
       border-color: #555
 
+  // 主题 D 可访问性修复：暗色模式下提亮链接与激活色
+  // giscus 链接 #0593d3 在 #333 上仅 3.68，提亮到 #30a5da（4.52:1）
+  .post-body p a
+    color: #30a5da
+    border-bottom: 1px solid #30a5da
+    &:hover
+      color: #5bc0eb
+      border-bottom-color: #5bc0eb
+
   // 侧栏 TOC 激活项 #fc6423 在 #333 上仅 4.20，提亮到 #fc7035（4.52:1）
   .sidebar-nav-active,
   .post-toc .nav .active > a,
