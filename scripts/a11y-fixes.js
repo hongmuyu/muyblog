@@ -22,5 +22,45 @@ hexo.extend.filter.register('after_render:html', function a11yFixes(str) {
     return `<input${before}type="checkbox"${after} aria-label="${label}">`;
   });
 
+  // 2) 为 <table> 包裹 .table-container 并补 tabindex + role + aria-label
+  // 仅处理非代码块内的表格（代码块 table 在 figure.highlight 内）
+  // 用配对扫描：找每个 <table> 是否在 figure.highlight 内，不是则包裹
+  let result = '';
+  let cursor = 0;
+  const tableRe = /<table>/g;
+  let m;
+  while ((m = tableRe.exec(str)) !== null) {
+    const idx = m.index;
+    // 向前找最近的 <figure 和 </figure>，判断是否在 highlight 内
+    const before = str.slice(0, idx);
+    const lastFigOpen = before.lastIndexOf('<figure');
+    const lastFigClose = before.lastIndexOf('</figure>');
+    const isHighlight = lastFigOpen > lastFigClose;
+    if (!isHighlight) {
+      result += str.slice(cursor, idx) + '<div class="table-container" tabindex="0" role="group" aria-label="可横向滚动的表格"><table>';
+      cursor = idx + m[0].length;
+    }
+  }
+  result += str.slice(cursor);
+  str = result;
+
+  // 同样处理 </table>（需要跳过 figure.highlight 内的）
+  result = '';
+  cursor = 0;
+  const tableEndRe = /<\/table>/g;
+  while ((m = tableEndRe.exec(str)) !== null) {
+    const idx = m.index;
+    const before = str.slice(0, idx);
+    const lastFigOpen = before.lastIndexOf('<figure');
+    const lastFigClose = before.lastIndexOf('</figure>');
+    const isHighlight = lastFigOpen > lastFigClose;
+    if (!isHighlight) {
+      result += str.slice(cursor, idx) + '</table></div>';
+      cursor = idx + m[0].length;
+    }
+  }
+  result += str.slice(cursor);
+  str = result;
+
   return str;
 });

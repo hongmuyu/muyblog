@@ -115,8 +115,15 @@ NexT.utils = {
 
   wrapTableWithBox: function() {
     document.querySelectorAll('table').forEach(element => {
+      // 主题 D：构建期 a11y-fixes 已包裹的正文表格跳过，避免嵌套容器
+      if (element.parentNode.classList.contains('table-container')) return;
       const box = document.createElement('div');
       box.className = 'table-container';
+      // 主题 D：横向可滚动区域需可被键盘聚焦（axe scrollable-region-focusable）；
+      // 用 role=group 而非 region，避免多个同名 landmark 触发 landmark-unique
+      box.tabIndex = 0;
+      box.setAttribute('role', 'group');
+      box.setAttribute('aria-label', '可横向滚动的表格');
       element.wrap(box);
     });
   },
