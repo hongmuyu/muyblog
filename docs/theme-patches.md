@@ -45,3 +45,4 @@
 
 ## 9. `themes/next/_config.yml`
 - **原因**：同上，`font.global.family: Lato` 清空（`enable: false` 保持不变）。
+- **改法 2（C-1/#8）**：`back2top.sidebar: true → false`。原配置把返回顶部按钮渲染进侧栏 DOM，移动端侧栏 `display:none` 导致按钮在移动端完全不渲染；改为 false 后由 `_partials/widgets.swig` 渲染到侧栏外（`position: fixed` 悬浮），移动端可用。

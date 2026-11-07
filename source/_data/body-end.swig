@@ -109,8 +109,8 @@
   }
 
   .comment-toggle-btn {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     font-size: 16px;
   }
 
@@ -1072,6 +1072,8 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 /* 返回顶部按钮样式补充 - 与评论按钮统一 */
+/* C-1 清理：可见性由主题 .back-to-top-on 类控制（utils.js），删除原先从未生效的
+   opacity:0 / .visible 机制；transform: translateY(20px) 会把按钮推离原位，一并移除 */
 .back-to-top {
   position: fixed;
   bottom: 30px;
@@ -1083,8 +1085,6 @@ document.addEventListener('DOMContentLoaded', function() {
   color: #666;
   border: none;
   cursor: pointer;
-  opacity: 0;
-  transform: translateY(20px);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -1092,11 +1092,6 @@ document.addEventListener('DOMContentLoaded', function() {
   font-size: 20px;
   z-index: 1000;
   box-shadow: 0 4px 15px rgba(0,0,0,0.12);
-}
-
-.back-to-top.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .back-to-top:hover {
@@ -1108,6 +1103,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .back-to-top:active {
   transform: translateY(-1px) scale(1.05);
+}
+
+/* 移动端触控面 ≥44px（盖过上面桌面 50px，因本规则更靠后） */
+@media (max-width: 767px) {
+  .back-to-top {
+    width: 44px;
+    height: 44px;
+    right: 15px;
+    bottom: 25px;
+    font-size: 18px;
+  }
 }
 
 /* 暗色模式适配 - 返回顶部按钮 */

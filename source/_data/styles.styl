@@ -949,3 +949,79 @@ img {
 .posts-expand .post-meta,
 .post-meta
   color: #767676
+
+// ============================================
+// C-1 触控目标优化（#9）：全站交互元素可点区域 ≥44×44px
+// 原则：只加 padding / min-size / 隐形热区（::before），
+//       不改字体大小、图标大小与可见盒尺寸
+// ============================================
+
+// --- 移动端头部：汉堡按钮、搜索触发钮（原 42px 宽/41px 高）---
+.site-nav-toggle
+  min-width: 44px
+
+.toggle.popup-trigger
+  min-width: 44px
+  min-height: 44px
+
+// --- 站点名链接（移动端顶栏，原高 33px）---
+.brand
+  padding: 6px 0
+
+// --- 侧栏导航菜单项（原高 36px，平板触控需要 44px）---
+.menu-item a,
+.menu-item span.exturl
+  padding-top: 4px
+  padding-bottom: 4px
+
+// --- 阅读全文按钮：有边框盒，用隐形热区补足（原 110×32）---
+// 注意：::before 绝对定位的参考盒是 padding 盒（不含 2px 边框），
+// 垂直 inset 需 -9px 才能保证命中区 ≥44px
+.post-button .btn
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    inset: -9px -12px
+
+// --- 代码块复制按钮（mac 风格无边框，原 30×26）：隐形热区补足 ---
+.copy-btn
+  &::before
+    content: ''
+    position: absolute
+    inset: -9px
+
+// --- 文章上下篇导航链接（原高 22px，无边框盒直接加 padding）---
+.post-nav-item a
+  padding-top: 11px
+  padding-bottom: 11px
+
+// --- 分类总览页链接（原高 25px，无边框盒直接加 padding）---
+.category-all-page .category-list-item > a
+  display: inline-block
+  padding-top: 9px
+  padding-bottom: 9px
+
+// --- 分页链接（有边框盒，用隐形热区补足；当前文章少未出现，防御性覆盖）---
+.pagination a
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    inset: -8px
+
+// --- 文章标签链接（当前文章均为空标签，防御性覆盖）---
+.post-tags a
+  display: inline-block
+  padding-top: 8px
+  padding-bottom: 8px
+
+// ============================================
+// C-1 悬浮按钮完善（#8）：触控 ≥44px，不遮挡正文，暗色可见
+// ============================================
+// 返回顶部：主题默认按内容撑开（scrollpercent 开启时宽度不定），强制最小触控面
+.back-to-top
+  min-width: 44px
+  min-height: 44px

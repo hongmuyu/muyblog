@@ -358,7 +358,9 @@ codeblock:
 back2top:
   enable: true
   # Back to top in sidebar.
-  sidebar: true
+  # 本地修改（C-1/#8）：sidebar:true 会把按钮渲染进侧栏 DOM，移动端侧栏 display:none
+  # 导致返回顶部在移动端整个不渲染；改为 false（渲染在 _layout widgets，悬浮固定定位）
+  sidebar: false
   # Scroll percent label in b2t button.
   scrollpercent: true
 
