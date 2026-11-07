@@ -1025,3 +1025,84 @@ img {
 .back-to-top
   min-width: 44px
   min-height: 44px
+
+// ============================================
+// C-2 A+D：表格与代码块横滑提示（#7）
+// 纯 CSS、零状态：
+// 1) grid 让内容与 ::after 同处一格，sticky 把箭头钉在可视右缘；
+// 2) scroll-state 容器查询只在「右侧还有内容」时显示，无内容时不出现假提示。
+// 兼容性：scroll-state 查询为渐进增强，不支持的浏览器仅不显示提示，
+//         横向滚动本身不受影响。
+// 改动范围：仅样式，不改 HTML/CMS 内容，对现有文章零侵入。
+// ============================================
+
+.table-container
+  display: grid
+  grid-template-columns: minmax(0, 1fr)
+  // 让容器自身成为滚动状态查询容器
+  container-type: scroll-state
+
+  > table
+    grid-area: 1 / 1
+
+// 代码块表格按内容宽度排版（grid 拉伸会挤出 10px 假溢出，干扰滚动状态判断）
+figure.highlight .table-container > table
+  width: max-content
+
+// 表格单元格不换行，保留列间对比（横滑由上面的遮罩提示承担）。
+// 例外：第 2 列是长文本说明列，放开换行；不放开时该配置表横滑约 2.9 屏，
+// 超出「2 屏」容差，放开后降到约 1.7 屏（375px）。
+.post-body table
+  th,
+  td
+    white-space: nowrap
+
+  th:nth-child(2),
+  td:nth-child(2)
+    white-space: normal
+
+// 右侧常驻渐变遮罩 + 箭头：与内容同格、sticky 右缘固定，不随横滑移动
+.table-container::after
+  content: '›'
+  grid-area: 1 / 1
+  justify-self: end
+  align-self: stretch
+  position: sticky
+  right: 0
+  z-index: 2
+  width: 44px
+  display: flex
+  align-items: center
+  justify-content: center
+  pointer-events: none
+  opacity: 0
+  font-size: 16px
+  font-weight: 600
+  line-height: 1
+  color: #888
+  // 表格底色：浅色为白，暗色由 --content-bg-color 自动切到 #333
+  background: linear-gradient(to right, transparent, var(--content-bg-color) 55%)
+
+// 代码块正文区固定浅色（#f7f7f7），明暗模式下都保持同一套遮罩
+figure.highlight .table-container::after
+  background: linear-gradient(to right, transparent, #f7f7f7 55%)
+
+@container scroll-state(scrollable: inline-end)
+  .table-container::after
+    opacity: 1
+
+// 暗色模式：表格遮罩跟随页面底色；代码块仍为浅色底，颜色不变
+@media (prefers-color-scheme: dark)
+  .table-container::after
+    color: #aaa
+    background: linear-gradient(to right, transparent, var(--content-bg-color) 55%)
+
+  figure.highlight .table-container::after
+    color: #999
+    background: linear-gradient(to right, transparent, #f7f7f7 55%)
+
+  // 主题表格边框固定为 #ddd，在 #333 深色底上过亮，暗色下降一档
+  .post-body table
+    th,
+    td
+      border-color: #555
