@@ -122,7 +122,8 @@
 
 ### P2-12（meta description）配套
 - `scripts/seo-description.js`（新建）：`before_generate` 为无 front-matter description 的公开文章从正文首段提取纯文本（去图片/代码块/标题/引用/列表/表格，句末标点自然断句，120–160 字），写入 `post.seo_description`；`template_locals` 为首页/分类页/归档页生成模板描述。私密文章通过 `hexo.secret_is` 跳过。分类页优先取分类自身 description，缺失则用该分类下前 3 个高频标签拼「涵盖 X、Y、Z 等主题」，无标签时退回站点名；归档页为「共 N 篇文章，覆盖 YYYY 至 YYYY 年，最新为「标题」」（均只统计公开文章）。
-- `themes/next/layout/_partials/head/head-unique.swig`：`open_graph()` 改为 `open_graph({ description: page.seo_description })`，未设置时回退到原链路（front-matter description / excerpt / 站点 description）。
+- 同文件 `before_generate` 第二个钩子生成 `post.seo_image`（分享卡片首图）：front-matter `image`/`photos[0]` 优先 → 正文第一张 `<img src>`（此时 after_post_render 已执行，拿到的是 .webp 路径）→ `_config.yml` 的 `og_image` 站点级回退（当前未配置则不输出）。私密文章跳过，不向外暴露媒体引用。
+- `themes/next/layout/_partials/head/head-unique.swig`：`open_graph()` 传 `description: page.seo_description` 与 `twitter_card: 'summary_large_image'`；`page.seo_image` 存在时传 `images: [page.seo_image]` 使文章页 og:image 恰好 1 条（hexo open_graph 默认会把正文所有图片都写进 og:image）。注意 nunjucks 函数参数内不支持三元表达式，需用 `{% if %}` 分支（曾在该写法上踩过 parseAggregate 报错）。
 - `source/admin/config.yml`：description 字段补 hint，说明选填与建议长度。
 
 ### 待核对（未实施）

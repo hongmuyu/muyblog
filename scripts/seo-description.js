@@ -150,6 +150,24 @@ hexo.extend.filter.register('before_generate', function () {
   if (count) hexo.log.info('seo-description: 为 %d 篇文章自动生成 meta description', count);
 }, 20);
 
+// 分享卡片图（og:image）：只取首图——front-matter image/photos 优先，
+// 否则正文第一张 <img>（after_post_render 已在此钩子前执行，拿到的已是 .webp 路径），
+// 都没有时退回站点级 og_image（_config.yml，当前未配置则不输出 og:image）。
+// 私密文章跳过：正文为密文，且不向外暴露任何媒体引用。
+const FIRST_IMG_RE = /<img [^>]*src=['"]([^'"]+)['"]/i;
+hexo.extend.filter.register('before_generate', function () {
+  const posts = hexo.locals.get('posts');
+  posts.forEach(post => {
+    if (!post || post.seo_image) return;
+    if (typeof hexo.secret_is === 'function' && hexo.secret_is(post)) return;
+    const fm = post.image || (post.photos && post.photos.length ? post.photos[0] : null);
+    if (fm) { post.seo_image = fm; return; }
+    const m = FIRST_IMG_RE.exec(post.content || '');
+    if (m) post.seo_image = m[1];
+    else if (hexo.config.og_image) post.seo_image = hexo.config.og_image;
+  });
+}, 20);
+
 // 列表页：按页面类型生成
 // 注：生成器产出的列表页 page.layout 为空（静态页才是 'page'），故按 path 判定
 hexo.extend.filter.register('template_locals', function (locals) {
