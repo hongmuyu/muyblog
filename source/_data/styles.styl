@@ -818,6 +818,12 @@ img {
 .post-meta
   color: #767676
 
+// 暗色模式：#767676 在 #333 上仅 2.78，提亮到 #9b9b9b（4.55:1）
+@media (prefers-color-scheme: dark)
+  .posts-expand .post-meta,
+  .post-meta
+    color: #9b9b9b
+
 // ============================================
 // C-1 触控目标优化（#9）：全站交互元素可点区域 ≥44×44px
 // 原则：只加 padding / min-size / 隐形热区（::before），
@@ -981,3 +987,18 @@ figure.highlight .table-container::after
     th,
     td
       border-color: #555
+
+  // 侧栏 TOC 激活项 #fc6423 在 #333 上仅 4.20，提亮到 #fc7035（4.52:1）
+  .sidebar-nav-active,
+  .post-toc .nav .active > a,
+  .post-toc .nav .active-current > a
+    color: #fc7035 !important
+
+  // 主题 D 可访问性修复：暗色下图片说明 #8a8a8a 在 #333 上仅 3.65，提亮到 #9b9b9b（4.55:1）
+  // 注：需两级选择器压过 post.styl 的 .post-body .image-caption（0,2,0）
+  .post-body .image-caption
+    color: #9b9b9b
+
+  // 主题 D 可访问性修复：暗色下页脚 #6b6b6b 在 #282828 上仅 2.76，提亮到 #9b9b9b（5.30:1）
+  .footer
+    color: #9b9b9b
