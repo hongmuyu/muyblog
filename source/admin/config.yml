@@ -34,7 +34,7 @@ collections:
       - { label: 更新日期, name: updated, widget: datetime, required: false, format: "YYYY-MM-DD HH:mm:ss", date_format: "YYYY-MM-DD", time_format: "HH:mm:ss" }
       - { label: 分类, name: categories, widget: list, required: false, add_label: 添加分类 }
       - { label: 标签, name: tags, widget: list, required: false, add_label: 添加标签 }
-      - { label: 摘要描述, name: description, widget: string, required: false }
+      - { label: 摘要描述, name: description, widget: string, required: false, hint: "选填，建议 120–160 字，用于 meta description 与分享卡片；留空则由系统自动从正文首段提取（不写缩写省略号）" }
       - { label: 显示目录, name: toc, widget: boolean, default: true, required: false }
       - { label: 开启评论, name: comments, widget: boolean, default: true, required: false }
       - { label: 正文, name: body, widget: markdown }

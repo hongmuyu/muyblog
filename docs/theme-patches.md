@@ -108,3 +108,24 @@
 ### 配套（非主题源码）
 - `scripts/a11y-fixes.js`（新建）：构建期 after_render:html 修复——任务清单 disabled checkbox 补 `aria-label="已完成/未完成"`；正文 `<table>` 包 `.table-container`（tabindex=0 + role=group + aria-label）；`<th>` 补 `scope="col"`。
 - `source/_data/styles.styl`：行内 code `#ff7600 → #b85500`；暗色组（post-meta/caption/footer `#9b9b9b`、链接 `#30a5da` + 下划线、TOC `#fc7035`）；skip-link 样式；全局 `:focus-visible` 蓝色描边（亮 `#4d9fff` / 暗 `#7ab8ff`）及 `.table-container/.back-to-top/.copy-btn` 焦点样式；`.back-to-top { opacity: 1 }`（主题默认 0.6/0.8 会把按钮内灰字稀释到 3.69/4.36，取消半透明后 5.74/5.94）。
+- **焦点描边规则的两个关键点（主题升级/改样式时勿丢）**：
+  1. 全局规则写作 `body :focus-visible`，不能写纯 `:focus-visible`。PurgeCSS（`scripts/purge-css.js`）会把不含标签/类名的纯伪类选择器判为未使用并删除，导致线上完全没有自定义焦点色；加 `body` 前缀后选择器含标签名，可正常保留。
+  2. 搜索输入框必须用 `.search-popup input.search-input:focus-visible`。主题 `search.styl` 的 `.search-popup input.search-input { outline: 0 }` 权重 (0,2,1) 高于普通类选择器，若只用 `.search-input:focus-visible` 会被压掉、输入框聚焦无描边。暗色覆盖块内需逐一列出同名选择器才能同权重覆盖颜色。
+- **暗色 TOC 激活色（`#fc7035 !important`）**：位置 `source/_data/styles.styl` 的 `@media (prefers-color-scheme: dark)` 块内，作用于 `.sidebar-nav-active, .post-toc .nav .active > a, .post-toc .nav .active-current > a`。原因：主题侧栏/TOC 激活色 `#fc6423`（亮色已改 `#c74f1c`）在暗色 `#333` 底上约 4.20，需提亮到 `#fc7035`（4.52）才满足 AA；`!important` 是因为 NexT 主题在 `sidebar-toc.styl` 用 `.post-toc .nav .active > a` 的同等权重规则 + 主题自身也有 `!important`，不加强制标记会被主题覆盖。主题升级时若改用 CSS 变量或调整该选择器，需要重新核对这条覆盖是否仍然命中。
+
+### P2-11（ARIA 完善）主题源码改动
+- `themes/next/layout/_partials/header/menu.swig`：`<nav class="site-nav">` 加 `id="site-nav"`（供汉堡按钮 `aria-controls`）；搜索菜单项 `<a role="button">` 补 `tabindex="0"` 与 `aria-label`（无 href 的 a 本身不可聚焦）。
+- `themes/next/layout/_partials/header/brand.swig`：汉堡 `.toggle` 补 `aria-expanded="false"` + `aria-controls="site-nav"`；搜索触发器 `.toggle.popup-trigger` 补 `role="button" tabindex="0" aria-label`。
+- `themes/next/source/js/next-boot.js`：汉堡改为 `#site-nav` 引用；点击时先按目标状态写 `aria-expanded`，动画结束再按实际 class 校正；键盘激活改用共用函数。
+- `themes/next/layout/_partials/search/index.swig`：`.popup.search-popup` 加 `role="dialog" aria-modal="true" aria-label`（焦点循环在 local-search.js 实现，未声明后置之不顾）。
+- `themes/next/layout/_partials/search/localsearch.swig`：搜索输入框补 `aria-label="搜索文章"`；关闭控件由 `<span>` 改为原生 `<button type="button" class="popup-btn-close" aria-label="关闭搜索">`。
+- `themes/next/source/js/local-search.js`：弹层打开时记录触发按钮并把焦点送入输入框；Tab/Shift+Tab 焦点循环（范围含结果链接）；关闭后焦点返还触发按钮（仅弹层原本处于打开态时）。
+- `themes/next/source/js/utils.js`：新增 `NexT.utils.bindRoleButtonKeys`（幂等 Enter/Space → click，汉堡/搜索触发器/返回顶部共用）；复制按钮由 `<div>` 改为 `<button type="button" aria-label="复制代码">`，复制成功后 label 临时变「已复制」/「复制失败」，2 秒后复原；复制流程结束后把焦点交还按钮（临时 textarea 删除后焦点会落回 body，键盘用户会丢失位置），并移除原来的 `target.blur()`。
+- `source/_data/styles.styl`：`.copy-btn, .popup-btn-close { background: transparent; border: 0; font-family: inherit }`（重置原生 button 默认外观）；`.popup-btn-close` 纳入焦点描边规则。
+
+### P2-12（meta description）配套
+- `scripts/seo-description.js`（新建）：`before_generate` 为无 front-matter description 的公开文章从正文首段提取纯文本（去图片/代码块/标题/引用/列表/表格，句末标点自然断句，120–160 字），写入 `post.seo_description`；`template_locals` 为首页/分类页/归档页生成模板描述。私密文章通过 `hexo.secret_is` 跳过。
+- `themes/next/layout/_partials/head/head-unique.swig`：`open_graph()` 改为 `open_graph({ description: page.seo_description })`，未设置时回退到原链路（front-matter description / excerpt / 站点 description）。
+- `source/admin/config.yml`：description 字段补 hint，说明选填与建议长度。
+- 待核对（未实施）：文章数量超过一页后，核对 NexT 默认分页 `<nav class="pagination">` 是否带 `aria-label`，缺失则补「分页导航」。
+
