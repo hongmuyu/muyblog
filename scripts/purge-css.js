@@ -19,6 +19,11 @@ const cssFile = path.join(publicDir, 'css', 'main.css');
 
 const safelist = {
   standard: [
+    // 纯伪类选择器：PurgeCSS 只内置保护 *, :root, :after, :before，
+    // 其余伪类若单独成规则（如 :focus-visible）会被判为未使用而整条删除
+    ':hover', ':focus', ':active', ':focus-visible', ':focus-within',
+    ':visited', ':link', ':checked', ':disabled', ':placeholder-shown',
+    '::selection', '::placeholder', '::before', '::after', '::marker',
     // 运行时动态切换
     /^giscus-/, /^sidebar-actions$/, /^use-motion$/,
     // 主题核心组件（含子选择器）
