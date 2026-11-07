@@ -165,6 +165,8 @@ NexT.utils = {
         if (backToTop) {
           backToTop.classList.toggle('back-to-top-on', window.scrollY > THRESHOLD);
           backToTop.querySelector('span').innerText = Math.round(scrollPercent) + '%';
+          // 主题 D：aria-label 需包含可见文本（百分比），满足 label-content-name-mismatch
+          backToTop.setAttribute('aria-label', '返回顶部，已滚动 ' + Math.round(scrollPercent) + '%');
         }
         if (readingProgressBar) {
           readingProgressBar.style.width = scrollPercent.toFixed(2) + '%';
