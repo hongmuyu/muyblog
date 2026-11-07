@@ -9,3 +9,5 @@ _multiconfig.yml
 # 私密内容：本地同步目录与构建期注入的私密文章，禁止入库
 .secret-content/
 source/_posts/secret/
+# Lighthouse CI 本地报告产物
+.lighthouseci/

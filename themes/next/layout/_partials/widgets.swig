@@ -1,7 +1,7 @@
 {%- if theme.back2top.enable and not theme.back2top.sidebar %}
-  <div class="back-to-top">
+  <div class="back-to-top" role="button" aria-label="返回顶部，已滚动 0%" tabindex="0">
     <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
+    <span aria-hidden="true">0%</span>
   </div>
 {%- endif %}
 {%- if theme.reading_progress.enable %}

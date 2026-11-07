@@ -9,6 +9,21 @@ HTMLElement.prototype.wrap = function(wrapper) {
 NexT.utils = {
 
   /**
+   * 主题 D（P2-11）：div/a 等非原生按钮元素补 Enter/Space 等效 click。
+   * 已绑定过的元素跳过（幂等），供汉堡菜单、搜索触发器、返回顶部共用。
+   */
+  bindRoleButtonKeys: function(element) {
+    if (!element || element.dataset.roleButtonBound) return;
+    element.dataset.roleButtonBound = 'true';
+    element.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        element.click();
+      }
+    });
+  },
+
+  /**
    * Wrap images with fancybox.
    */
   wrapImageWithFancyBox: function() {
@@ -26,7 +41,8 @@ NexT.utils = {
 
       var imageTitle = $image.attr('title') || $image.attr('alt');
       if (imageTitle) {
-        $imageWrapLink.append(`<p class="image-caption">${imageTitle}</p>`);
+        // 图片说明与 img alt 重复，对屏幕阅读器隐藏避免冗余朗读
+        $imageWrapLink.append(`<p class="image-caption" aria-hidden="true">${imageTitle}</p>`);
         // Make sure img title tag will show correctly in fancybox
         $imageWrapLink.attr('title', imageTitle).attr('data-caption', imageTitle);
       }
@@ -67,7 +83,8 @@ NexT.utils = {
       const box = document.createElement('div');
       element.wrap(box);
       box.classList.add('highlight-container');
-      box.insertAdjacentHTML('beforeend', '<div class="copy-btn"><i class="fa fa-clipboard fa-fw"></i></div>');
+      // 主题 D（P2-11）：改用原生 button，自带键盘与语义支持
+      box.insertAdjacentHTML('beforeend', '<button type="button" class="copy-btn" aria-label="复制代码"><svg class="fa fa-clipboard fa-fw" data-icon="clipboard" aria-hidden="true" focusable="false"><use href="#i-clipboard" xlink:href="#i-clipboard"/></svg></button>');
       var button = element.parentNode.querySelector('.copy-btn');
       button.addEventListener('click', event => {
         var target = event.currentTarget;
@@ -86,19 +103,35 @@ NexT.utils = {
         ta.readOnly = false;
         var result = document.execCommand('copy');
         if (CONFIG.copycode.show_result) {
-          target.querySelector('i').className = result ? 'fa fa-check fa-fw' : 'fa fa-times fa-fw';
+          var icon = target.querySelector('svg[data-icon] use');
+          var next = result ? 'check' : 'times';
+          icon.setAttribute('href', '#i-' + next);
+          icon.setAttribute('xlink:href', '#i-' + next);
+          var svg = target.querySelector('svg[data-icon]');
+          svg.setAttribute('data-icon', next);
         }
+        // 主题 D（P2-11）：无障碍名称同步复制结果，2 秒后复原
+        target.setAttribute('aria-label', result ? '已复制' : '复制失败');
+        clearTimeout(target._copyLabelTimer);
+        target._copyLabelTimer = setTimeout(() => {
+          target.setAttribute('aria-label', '复制代码');
+        }, 2000);
         ta.blur(); // For iOS
-        target.blur();
         if (selected) {
           selection.removeAllRanges();
           selection.addRange(selected);
         }
         document.body.removeChild(ta);
+        // 主题 D（P2-11）：删除临时 textarea 后把焦点交还按钮，键盘用户位置不丢失
+        target.focus();
       });
       button.addEventListener('mouseleave', event => {
         setTimeout(() => {
-          event.target.querySelector('i').className = 'fa fa-clipboard fa-fw';
+          var svg = event.target.querySelector('svg[data-icon]');
+          var use = svg.querySelector('use');
+          use.setAttribute('href', '#i-clipboard');
+          use.setAttribute('xlink:href', '#i-clipboard');
+          svg.setAttribute('data-icon', 'clipboard');
         }, 300);
       });
     });
@@ -106,8 +139,15 @@ NexT.utils = {
 
   wrapTableWithBox: function() {
     document.querySelectorAll('table').forEach(element => {
+      // 主题 D：构建期 a11y-fixes 已包裹的正文表格跳过，避免嵌套容器
+      if (element.parentNode.classList.contains('table-container')) return;
       const box = document.createElement('div');
       box.className = 'table-container';
+      // 主题 D：横向可滚动区域需可被键盘聚焦（axe scrollable-region-focusable）；
+      // 用 role=group 而非 region，避免多个同名 landmark 触发 landmark-unique
+      box.tabIndex = 0;
+      box.setAttribute('role', 'group');
+      box.setAttribute('aria-label', '可横向滚动的表格');
       element.wrap(box);
     });
   },
@@ -148,6 +188,8 @@ NexT.utils = {
         if (backToTop) {
           backToTop.classList.toggle('back-to-top-on', window.scrollY > THRESHOLD);
           backToTop.querySelector('span').innerText = Math.round(scrollPercent) + '%';
+          // 主题 D：aria-label 需包含可见文本（百分比），满足 label-content-name-mismatch
+          backToTop.setAttribute('aria-label', '返回顶部，已滚动 ' + Math.round(scrollPercent) + '%');
         }
         if (readingProgressBar) {
           readingProgressBar.style.width = scrollPercent.toFixed(2) + '%';
@@ -155,6 +197,8 @@ NexT.utils = {
       }
     });
 
+    // 主题 D（P2-11）：div[role=button] 需支持 Enter/Space
+    NexT.utils.bindRoleButtonKeys(backToTop);
     backToTop && backToTop.addEventListener('click', () => {
       window.anime({
         targets  : document.scrollingElement,

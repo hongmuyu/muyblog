@@ -28,7 +28,7 @@
       </div>
 
       <div class="chart-section">
-        <h3><i class="fas fa-folder-open"></i> 分类分布</h3>
+        <h2><i class="fas fa-folder-open"></i> 分类分布</h2>
         {%- for row in page.categories %}
           <div class="chart-row">
             <span class="chart-label">{{ row.name }}</span>
@@ -41,7 +41,7 @@
       </div>
 
       <div class="chart-section">
-        <h3><i class="fas fa-tags"></i> 标签 Top 10</h3>
+        <h2><i class="fas fa-tags"></i> 标签 Top 10</h2>
         {%- for row in page.tags %}
           <div class="chart-row">
             <span class="chart-label">{{ row.name }}</span>
@@ -54,7 +54,7 @@
       </div>
 
       <div class="chart-section">
-        <h3><i class="fas fa-calendar-alt"></i> 年度发文</h3>
+        <h2><i class="fas fa-calendar-alt"></i> 年度发文</h2>
         {%- for row in page.years %}
           <div class="chart-row">
             <span class="chart-label">{{ row.name }}</span>

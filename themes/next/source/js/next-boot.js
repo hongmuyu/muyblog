@@ -8,20 +8,30 @@ NexT.boot.registerEvents = function() {
   NexT.utils.registerCanIUseTag();
 
   // Mobile top menu bar.
-  document.querySelector('.site-nav-toggle .toggle').addEventListener('click', () => {
+  var navToggle = document.querySelector('.site-nav-toggle .toggle');
+  var siteNav = document.querySelector('#site-nav');
+  // 主题 D（P2-11）：焦点/键盘语义与 aria-expanded 状态同步
+  NexT.utils.bindRoleButtonKeys(navToggle);
+  var syncNavExpanded = () => {
+    navToggle.setAttribute('aria-expanded', siteNav.classList.contains('site-nav-on') ? 'true' : 'false');
+  };
+  navToggle.addEventListener('click', event => {
     event.currentTarget.classList.toggle('toggle-close');
-    var siteNav = document.querySelector('.site-nav');
     var animateAction = siteNav.classList.contains('site-nav-on') ? 'slideUp' : 'slideDown';
+    // 动画开始即反映目标状态，结束后再按实际 class 校正
+    navToggle.setAttribute('aria-expanded', animateAction === 'slideDown' ? 'true' : 'false');
 
     if (typeof Velocity === 'function') {
       Velocity(siteNav, animateAction, {
         duration: 200,
         complete: function() {
           siteNav.classList.toggle('site-nav-on');
+          syncNavExpanded();
         }
       });
     } else {
       siteNav.classList.toggle('site-nav-on');
+      syncNavExpanded();
     }
   });
 

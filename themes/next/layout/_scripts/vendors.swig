@@ -5,7 +5,7 @@
   {%- set js_vendors = js_vendors | attr('pjax', 'pjax/pjax.min.js') %}
 {%- endif %}
 
-{%- if theme.fancybox %}
+{%- if theme.fancybox and page.layout === 'post' %}
   {%- set js_vendors = js_vendors | attr('jquery', '//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js') %}
   {%- set js_vendors = js_vendors | attr('fancybox', '//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js') %}
 {%- endif %}
@@ -34,6 +34,8 @@
     {%- set canvas_nest_uri = theme.vendors.canvas_nest_nomobile or next_vendors('canvas-nest/canvas-nest-nomobile.min.js') %}
   {%- endif %}
   <script color='{{ theme.canvas_nest.color }}' opacity='{{ theme.canvas_nest.opacity }}' zIndex='{{ theme.canvas_nest.zIndex }}' count='{{ theme.canvas_nest.count }}' src="{{ canvas_nest_uri }}"></script>
+  {# 主题 D 可访问性修复：canvas-nest 背景动画纯装饰，同步创建后随即对屏幕阅读器隐藏（移动端不创建 canvas，选择器自然落空） #}
+  <script>(function(){var c=document.querySelector('canvas[id^="c_n"]');if(c)c.setAttribute('aria-hidden','true');})();</script>
 {%- endif %}
 
 {%- if theme.canvas_ribbon.enable %}

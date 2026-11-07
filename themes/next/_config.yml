@@ -52,7 +52,8 @@ language_switcher: false
 
 footer:
   # Specify the date when the site was setup. If not defined, current year will be used.
-  since: 2025-10-28
+  # 只写年份：写成 2025-10-28 会被 YAML 解析成 Date 对象，模板直接输出会导致页脚出现完整 GMT 时间串
+  since: 2025
 
   # Icon between year and copyright info.
   icon:
@@ -357,7 +358,9 @@ codeblock:
 back2top:
   enable: true
   # Back to top in sidebar.
-  sidebar: true
+  # 本地修改（C-1/#8）：sidebar:true 会把按钮渲染进侧栏 DOM，移动端侧栏 display:none
+  # 导致返回顶部在移动端整个不渲染；改为 false（渲染在 _layout widgets，悬浮固定定位）
+  sidebar: false
   # Scroll percent label in b2t button.
   scrollpercent: true
 
@@ -389,7 +392,7 @@ github_banner:
 # For more information: https://github.com/hustcc/canvas-nest.js
 canvas_nest:
   enable: true
-  onmobile: true # Display on mobile or not
+  onmobile: false # Display on mobile or not（关闭移动端，避免常驻 rAF 动画耗电/占 CPU）
   color: "0,0,255" # RGB values, use `,` to separate
   opacity: 0.5 # The opacity of line: 0~1
   zIndex: -1 # z-index property of the background
@@ -422,7 +425,7 @@ font:
   # Global font settings used for all elements inside <body>.
   global:
     external: true
-    family: Lato
+    family:    # 本地修改（B-4）：清空 Lato，使用系统字体栈（见 css/_variables/base.styl）
     size:
 
   # Font settings for site title (.site-title).
@@ -834,9 +837,11 @@ motion:
     # slideUpIn | slideDownIn | slideLeftIn | slideRightIn
     # slideUpBigIn | slideDownBigIn | slideLeftBigIn | slideRightBigIn
     # perspectiveUpIn | perspectiveDownIn | perspectiveLeftIn | perspectiveRightIn
-    post_block: fadeIn
-    post_header: slideDownIn
-    post_body: slideDownIn
+    # 首屏 LCP 元素（文章正文）依赖这三个入场动画才会从 opacity:0 变可见，
+    # 移动端模拟实测造成约 3s 的渲染延迟，故关闭首屏内容动画（保留侧边栏等其余动画）
+    post_block: false
+    post_header: false
+    post_body: false
     coll_header: slideLeftIn
     # Only for Pisces | Gemini.
     sidebar: slideUpIn

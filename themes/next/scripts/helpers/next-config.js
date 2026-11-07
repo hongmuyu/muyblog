@@ -10,6 +10,9 @@ const url = require('url');
 hexo.extend.helper.register('next_config', function() {
   let { config, theme, next_version } = this;
   config.algolia = config.algolia || {};
+  // fancybox 与 jquery 仅在文章页加载（vendors.swig / head.swig 按 page.layout === 'post' 判断），
+  // 前端开关必须同步限定为文章页，否则列表页 wrapImageWithFancyBox 会因 $ 未定义抛错
+  const fancyboxEnabled = !!theme.fancybox && this.page && this.page.layout === 'post';
   let exportConfig = {
     hostname  : url.parse(config.url).hostname || config.url,
     root      : config.root,
@@ -20,7 +23,7 @@ hexo.extend.helper.register('next_config', function() {
     copycode  : theme.codeblock.copy_button,
     back2top  : theme.back2top,
     bookmark  : theme.bookmark,
-    fancybox  : theme.fancybox,
+    fancybox  : fancyboxEnabled,
     mediumzoom: theme.mediumzoom,
     lazyload  : theme.lazyload,
     pangu     : theme.pangu,

@@ -12,7 +12,8 @@
   }
 
   .image-caption, .figure .caption {
-    color: $grey-dark;
+    // 主题 D 可访问性修复：#999 在白底上对比度仅 2.84，加深到 #767676（4.54:1）
+    color: #767676;
     font-size: $font-size-small;
     font-weight: bold;
     line-height: 1;
@@ -58,11 +59,13 @@
 }
   
  .post-body p a{
-     color: #0593d3;
-     border-bottom: none;
+     // 主题 D 可访问性修复：#0593d3 在白底上对比度仅 3.43，加深到 #047eb5（4.51:1）
+     color: #047eb5;
+     border-bottom: 1px solid #047eb5;
      &:hover {
-       color: #0477ab;
-       text-decoration: underline;
+       color: #036a99;
+       border-bottom-color: #036a99;
+       text-decoration: none;
      }
    }
 

@@ -1,11 +1,26 @@
-// 添加背景图片
-body {
-      background: url(images/background.png);//自己喜欢的图片地址
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: 50% 50%;
+// 添加背景图片（已禁用：引用的 images/background.png 不存在，每个页面都会产生一次 404 请求；
+// 如需背景图，先把图片放到 source/images/ 再取消注释）
+// body {
+//       background: url(images/background.png);
+//       background-size: cover;
+//       background-repeat: no-repeat;
+//       background-attachment: fixed;
+//       background-position: 50% 50%;
+// }
+// FontAwesome → 内联 SVG 的辅助类换算（配合 scripts/replace-fa.js）
+svg.fa, svg.fas, svg.far, svg.fab {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  fill: currentColor;
 }
+svg.fa-fw { width: 1.25em; text-align: center; }
+svg.fa-lg { font-size: 1.33333em; line-height: 0.75em; vertical-align: -0.0667em; }
+svg.fa-5x { font-size: 5em; }
+@keyframes fa-pulse { 0% { transform: rotate(0); } 12.5% { transform: rotate(45deg); } 25% { transform: rotate(90deg); } 37.5% { transform: rotate(135deg); } 50% { transform: rotate(180deg); } 62.5% { transform: rotate(225deg); } 75% { transform: rotate(270deg); } 87.5% { transform: rotate(315deg); } 100% { transform: rotate(360deg); } }
+svg.fa-pulse { animation: fa-pulse 1s steps(8) infinite; transform-origin: 50% 50%; }
+svg.fa-spinner { animation: fa-pulse 1s steps(8) infinite; transform-origin: 50% 50%; }
 // 主页文章添加阴影效果
 .post {
    margin-top: 60px;
@@ -16,7 +31,8 @@ body {
 }
    // Custom styles.
 code {
-    color: #ff7600;
+    // 主题 D 可访问性修复：#ff7600 在 #fbf7f8 上对比度仅 2.51，加深到 #b85500（4.56:1）
+    color: #b85500;
     background: #fbf7f8;
     margin: 2px;
 }
@@ -373,6 +389,9 @@ code {
   border-radius: 50%;
   background: var(--btn-bg);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  // 主题 D 可访问性修复：主题默认 opacity 0.6/0.8 会把白底灰字按钮的百分比文本
+  // 稀释到对比度 3.69（亮）/4.36（暗），取消半透明后 #666 on #fff = 5.74、#aaa on #2d2d2d = 5.94
+  opacity: 1;
   transition: all 0.3s ease;
   
   &:hover {
@@ -511,7 +530,7 @@ img {
     border-radius: 50%
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12)
 
-  h1
+  h2
     margin: 0.6rem 0 0.2rem
 
   blockquote
@@ -607,7 +626,7 @@ img {
 .chart-section
   margin-bottom: 2rem
 
-  h3
+  h2
     margin: 0 0 0.8rem
     font-size: 1.05em
 
@@ -695,139 +714,6 @@ img {
 
   .site-state-item-count
     font-size: 1em
-
-// ============ 加密文章密码框 ============
-// 灰白黑极简风格：线条式无边框输入框 + 灰色提示语 + 黑色幽灵按钮
-// 插件 CSS 在页面末尾注入，用容器 ID 前缀（1,1,0）确保压过其全部规则
-// 插件的标签带绝对定位色块伪元素（::before/::after 深灰滑入动画），必须显式清除
-// 注意：插件仅绑定按钮 click（无回车提交），按钮保留
-#hexo-blog-encrypt
-  .hbe-content
-    max-width: 480px
-    margin: 0 auto
-    padding: 3.5em 1em 2.5em
-    background: none
-    border: none
-
-  .hbe-form
-    padding: 0
-    text-align: center
-
-  // 彻底清除插件标签的装饰伪元素（深灰色块与下划线动画）
-  .hbe-input-label::before,
-  .hbe-input-label::after
-    display: none
-    content: none
-
-  .hbe-input
-    display: block
-    float: none
-    width: 100%
-    min-width: 0
-    margin: 0
-
-  // 线条式输入框：只留上下两条细线，聚焦时变黑
-  // 插件默认失焦时 opacity: 0（浮动标签模式），必须强制可见
-  .hbe-input-field
-    display: block
-    float: none
-    width: 100%
-    margin: 0
-    padding: 1.2em 0.5em
-    border: none
-    border-top: 1px solid #d9d9d9
-    border-bottom: 1px solid #d9d9d9
-    border-radius: 0
-    background: none
-    color: #333
-    font-size: 100%
-    opacity: 1
-    text-align: center
-    letter-spacing: 0.35em
-    box-shadow: none
-    transition: border-color 0.25s ease
-
-    &:focus
-      outline: none
-      border-top-color: #222
-      border-bottom-color: #222
-      box-shadow: none
-
-  // Chrome 自动填充的蓝底还原为白色
-  .hbe-input-field:-webkit-autofill
-    -webkit-box-shadow: 0 0 0 1000px #fff inset
-    -webkit-text-fill-color: #333
-
-  .hbe-input-label
-    display: block
-    position: static
-    float: none
-    width: 100%
-    padding: 0
-    margin: 0.9em 0 0
-    background: none
-    font-weight: normal
-    pointer-events: auto
-
-  // 提示语：灰色小字居中
-  // 插件在已填/聚焦状态下会把它推下 2.1em 并缩到 0.65 倍，必须锁死 transform
-  .hbe-input-label-content
-    display: block
-    position: static
-    width: 100%
-    padding: 0
-    background: none
-    color: #999
-    font-size: 13px
-    text-align: center
-    transform: none
-
-  // 黑色幽灵按钮：灰底黑字描边，悬停填充纯黑
-  .hbe-button
-    display: inline-block
-    width: auto
-    height: auto
-    padding: 0.45em 1.8em
-    margin: 1.5em auto 0
-    border: 1px solid #444
-    border-radius: 999px
-    background: none
-    color: #333
-    font-size: 85%
-    font-weight: normal
-    letter-spacing: 0.3em
-    cursor: pointer
-    transition: all 0.25s ease
-
-    &:hover
-      background: #222
-      border-color: #222
-      color: #fff
-
-  // 底部：虚线分隔 + 居中小锁图标（灰色系）
-  .hbe-form::after
-    content: "\f023"
-    font-family: "Font Awesome 5 Free"
-    font-weight: 900
-    display: block
-    width: 100%
-    margin-top: 2.2em
-    padding-top: 0.9em
-    border-top: 1px dashed #e0e0e0
-    color: #b3b3b3
-    font-size: 15px
-    text-align: center
-
-  // 错误提示：中和插件的粉色框为灰色系
-  .hbe-error
-    display: inline-block
-    margin-top: 1em
-    padding: 0.4em 1.2em
-    background: #f6f6f6
-    border-radius: 6px
-    font-size: 82%
-    color: #4a4a4a
-    font-weight: 500
 
 // ============ 私密分类入口页 ============
 // 与加密文章页同一套灰白黑视觉：线条式输入、幽灵胶囊按钮、虚线收尾
@@ -926,3 +812,278 @@ img {
   border-top: 1px dashed #e0e0e0
   color: #b3b3b3
   font-size: 13px
+
+// ============================================
+// 文章信息（日期/分类/字数）对比度修正
+// 原颜色 #999 在白底上对比度仅约 2.85:1，加深到 #767676（约 4.54:1，满足 WCAG AA）
+// ============================================
+.posts-expand .post-meta,
+.post-meta
+  color: #767676
+
+// 暗色模式：#767676 在 #333 上仅 2.78，提亮到 #9b9b9b（4.55:1）
+@media (prefers-color-scheme: dark)
+  .posts-expand .post-meta,
+  .post-meta
+    color: #9b9b9b
+
+// ============================================
+// C-1 触控目标优化（#9）：全站交互元素可点区域 ≥44×44px
+// 原则：只加 padding / min-size / 隐形热区（::before），
+//       不改字体大小、图标大小与可见盒尺寸
+// ============================================
+
+// --- 移动端头部：汉堡按钮、搜索触发钮（原 42px 宽/41px 高）---
+.site-nav-toggle
+  min-width: 44px
+
+.toggle.popup-trigger
+  min-width: 44px
+  min-height: 44px
+
+// --- 站点名链接（移动端顶栏，原高 33px）---
+.brand
+  padding: 6px 0
+
+// --- 侧栏导航菜单项（原高 36px，平板触控需要 44px）---
+.menu-item a,
+.menu-item span.exturl
+  padding-top: 4px
+  padding-bottom: 4px
+
+// --- 阅读全文按钮：有边框盒，用隐形热区补足（原 110×32）---
+// 注意：::before 绝对定位的参考盒是 padding 盒（不含 2px 边框），
+// 垂直 inset 需 -9px 才能保证命中区 ≥44px
+.post-button .btn
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    inset: -9px -12px
+
+// --- 代码块复制按钮（mac 风格无边框，原 30×26）：隐形热区补足 ---
+.copy-btn
+  &::before
+    content: ''
+    position: absolute
+    inset: -9px
+
+// --- 文章上下篇导航链接（原高 22px，无边框盒直接加 padding）---
+.post-nav-item a
+  padding-top: 11px
+  padding-bottom: 11px
+
+// --- 分类总览页链接（原高 25px，无边框盒直接加 padding）---
+.category-all-page .category-list-item > a
+  display: inline-block
+  padding-top: 9px
+  padding-bottom: 9px
+
+// --- 分页链接（有边框盒，用隐形热区补足；当前文章少未出现，防御性覆盖）---
+.pagination a
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    inset: -8px
+
+// --- 文章标签链接（当前文章均为空标签，防御性覆盖）---
+.post-tags a
+  display: inline-block
+  padding-top: 8px
+  padding-bottom: 8px
+
+// 私密文章的分类/标签页不生成，模板把链接降级为纯文本，样式与链接保持一致
+.post-tags span
+  display: inline-block
+  font-size: 0.8125em
+
+  &:not(:last-child)
+    margin-right: 10px
+
+// ============================================
+// C-1 悬浮按钮完善（#8）：触控 ≥44px，不遮挡正文，暗色可见
+// ============================================
+// 返回顶部：主题默认按内容撑开（scrollpercent 开启时宽度不定），强制最小触控面
+.back-to-top
+  min-width: 44px
+  min-height: 44px
+
+// ============================================
+// C-2 A+D：表格与代码块横滑提示（#7）
+// 纯 CSS、零状态：
+// 1) grid 让内容与 ::after 同处一格，sticky 把箭头钉在可视右缘；
+// 2) scroll-state 容器查询只在「右侧还有内容」时显示，无内容时不出现假提示。
+// 兼容性：scroll-state 查询为渐进增强，不支持的浏览器仅不显示提示，
+//         横向滚动本身不受影响。
+// 改动范围：仅样式，不改 HTML/CMS 内容，对现有文章零侵入。
+// ============================================
+
+.table-container
+  display: grid
+  grid-template-columns: minmax(0, 1fr)
+  // 让容器自身成为滚动状态查询容器
+  container-type: scroll-state
+
+  > table
+    grid-area: 1 / 1
+
+// 代码块表格按内容宽度排版（grid 拉伸会挤出 10px 假溢出，干扰滚动状态判断）
+figure.highlight .table-container > table
+  width: max-content
+
+// 表格单元格不换行，保留列间对比（横滑由上面的遮罩提示承担）。
+// 例外：第 2 列是长文本说明列，放开换行；不放开时该配置表横滑约 2.9 屏，
+// 超出「2 屏」容差，放开后降到约 1.7 屏（375px）。
+.post-body table
+  th,
+  td
+    white-space: nowrap
+
+  th:nth-child(2),
+  td:nth-child(2)
+    white-space: normal
+
+// 右侧常驻渐变遮罩 + 箭头：与内容同格、sticky 右缘固定，不随横滑移动
+.table-container::after
+  content: '›'
+  grid-area: 1 / 1
+  justify-self: end
+  align-self: stretch
+  position: sticky
+  right: 0
+  z-index: 2
+  width: 44px
+  display: flex
+  align-items: center
+  justify-content: center
+  pointer-events: none
+  opacity: 1
+  font-size: 16px
+  font-weight: 600
+  line-height: 1
+  color: #888
+  // 表格底色：浅色为白，暗色由 --content-bg-color 自动切到 #333
+  background: linear-gradient(to right, transparent, var(--content-bg-color) 55%)
+
+// 代码块正文区固定浅色（#f7f7f7），明暗模式下都保持同一套遮罩
+figure.highlight .table-container::after
+  background: linear-gradient(to right, transparent, #f7f7f7 55%)
+
+// 默认常驻显示（上方 opacity:1）：不支持 scroll-state 的浏览器（Safari/Firefox）
+// 无法精确判断右侧是否还有内容，用常驻提示兜底（箭头 pointer-events:none，不挡操作）。
+@supports (container-type: scroll-state)
+  .table-container::after
+    opacity: 0
+
+// 支持的浏览器：仅右侧还有内容时显示，滚到底自动消失
+@container scroll-state(scrollable: inline-end)
+  .table-container::after
+    opacity: 1
+
+// 暗色模式：表格遮罩跟随页面底色；代码块仍为浅色底，颜色不变
+@media (prefers-color-scheme: dark)
+  .table-container::after
+    color: #aaa
+    background: linear-gradient(to right, transparent, var(--content-bg-color) 55%)
+
+  figure.highlight .table-container::after
+    color: #999
+    background: linear-gradient(to right, transparent, #f7f7f7 55%)
+
+  // 主题表格边框固定为 #ddd，在 #333 深色底上过亮，暗色下降一档
+  .post-body table
+    th,
+    td
+      border-color: #555
+
+  // 主题 D 可访问性修复：暗色模式下提亮链接与激活色
+  // giscus 链接 #0593d3 在 #333 上仅 3.68，提亮到 #30a5da（4.52:1）
+  .post-body p a
+    color: #30a5da
+    border-bottom: 1px solid #30a5da
+    &:hover
+      color: #5bc0eb
+      border-bottom-color: #5bc0eb
+
+  // 侧栏 TOC 激活项 #fc6423 在 #333 上仅 4.20，提亮到 #fc7035（4.52:1）
+  .sidebar-nav-active,
+  .post-toc .nav .active > a,
+  .post-toc .nav .active-current > a
+    color: #fc7035 !important
+
+  // 主题 D 可访问性修复：暗色下图片说明 #8a8a8a 在 #333 上仅 3.65，提亮到 #9b9b9b（4.55:1）
+  // 注：需两级选择器压过 post.styl 的 .post-body .image-caption（0,2,0）
+  .post-body .image-caption
+    color: #9b9b9b
+
+  // 主题 D 可访问性修复：暗色下页脚 #6b6b6b 在 #282828 上仅 2.76，提亮到 #9b9b9b（5.30:1）
+  .footer
+    color: #9b9b9b
+
+// ============================================
+// 主题 D 可访问性修复（P1-8）
+// ============================================
+
+// skip link：默认隐藏，聚焦时显示
+.skip-link
+  position: absolute
+  top: -40px
+  left: 0
+  background: #000
+  color: #fff
+  padding: 8px 16px
+  z-index: 10001
+  text-decoration: none
+  transition: top 0.2s ease
+
+  &:focus
+    top: 0
+    color: #fff
+
+// 全局统一 :focus-visible 焦点样式
+// 必须带 body 前缀：PurgeCSS 会把纯伪类选择器（不含标签/类名）判定为未使用而删除
+body :focus-visible
+  outline: 2px solid #4d9fff
+  outline-offset: 2px
+
+// 表格容器 / 返回顶部 / 复制按钮 / 搜索输入框聚焦样式
+// 主题内这些选择器各自带有 outline: 0 或更高优先级，需显式写全描边并提高权重；
+// 搜索输入框主题规则为 .search-popup input.search-input，权重更高故多带一层 .search-popup
+.table-container:focus-visible,
+.back-to-top:focus-visible,
+.copy-btn:focus-visible,
+.popup-btn-close:focus-visible,
+.search-popup input.search-input:focus-visible,
+.post-body .tabs ul.nav-tabs li.tab a:focus-visible,
+.tabs-comment ul.nav-tabs li.tab a:focus-visible,
+.secret-input:focus-visible
+  outline: 2px solid #4d9fff
+  outline-offset: 2px
+
+// 暗色模式下焦点框保持可见（选择器与上方逐一对应，保证同权重覆盖）
+@media (prefers-color-scheme: dark)
+  body :focus-visible
+    outline-color: #7ab8ff
+  .table-container:focus-visible,
+  .back-to-top:focus-visible,
+  .copy-btn:focus-visible,
+  .popup-btn-close:focus-visible,
+  .search-popup input.search-input:focus-visible,
+  .post-body .tabs ul.nav-tabs li.tab a:focus-visible,
+  .tabs-comment ul.nav-tabs li.tab a:focus-visible,
+  .secret-input:focus-visible
+    outline-color: #7ab8ff
+
+// ============================================
+// 主题 D（P2-11）：复制按钮 / 搜索关闭按钮改为原生 <button>
+// 重置浏览器默认外观，避免边框与灰底破坏原有视觉
+// ============================================
+.copy-btn,
+.popup-btn-close
+  background: transparent
+  border: 0
+  font-family: inherit
+

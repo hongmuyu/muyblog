@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "build": "hexo generate",
+    "purge": "node scripts/purge-css.js",
     "clean": "hexo clean",
     "server": "hexo server",
-    "admin": "hexo server -d"
+    "admin": "hexo server -d",
+    "audit": "node scripts/audit.js",
+    "budget": "node scripts/perf-budget.js",
+    "lhci": "npx --yes @lhci/cli@0.15.1 autorun"
   },
   "hexo": {
     "version": "8.1.0"
@@ -16,7 +20,6 @@
     "hexo": "^8.0.0",
     "hexo-admin": "^2.3.0",
     "hexo-asset-image": "^1.0.0",
-    "hexo-blog-encrypt": "^4.1.0",
     "hexo-generator-archive": "^2.0.0",
     "hexo-generator-baidu-sitemap": "^0.1.9",
     "hexo-generator-category": "^2.0.0",
@@ -32,5 +35,12 @@
     "hexo-server": "^3.0.0",
     "hexo-theme-landscape": "^1.0.0",
     "hexo-wordcount": "^6.0.1"
+  },
+  "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-regular-svg-icons": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "purgecss": "^8.0.0",
+    "sharp": "^0.35.5"
   }
 }
