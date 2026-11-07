@@ -150,6 +150,10 @@
   - `source/_data/styles.styl` 增加 `.post-tags span`，样式与链接标签保持一致。
   - 私密文章自身仍算「隐藏」，因此其分类/标签自动落入纯文本分支，无需额外判断当前文章是否私密。
 
+### `themes/next/scripts/helpers/next-config.js`：fancybox 开关按页面限定
+- **原因**：B-2 把 jquery/fancybox 限定为仅文章页加载后，前端 `CONFIG.fancybox` 仍取 `theme.fancybox`（全站 true），列表页执行 `wrapImageWithFancyBox()` 时抛出 `$ is not defined`（首页、分类页、归档页均有，控制台可见，不影响渲染）。
+- **改法**：`fancybox: theme.fancybox && this.page.layout === 'post'`，与 `vendors.swig` / `head.swig` 的加载条件保持一致。主题依赖 head 的 partial 缓存已关闭（见第 5 条），逐页取值有效。
+
 ## 12. 构建期样式坑位统一归档（2026-11）
 
 主题升级或调整构建流程后，先按本节逐项复查。
