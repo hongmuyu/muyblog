@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "hexo generate",
+    "purge": "node scripts/purge-css.js",
     "clean": "hexo clean",
     "server": "hexo server",
     "admin": "hexo server -d"

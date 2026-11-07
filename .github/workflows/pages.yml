@@ -52,6 +52,10 @@ jobs:
         env:
           SECRET_CATEGORY_PASSWORD: ${{ secrets.SECRET_CATEGORY_PASSWORD }}
 
+      - name: Purge unused CSS
+        # 独立脚本：必须在 Hexo 产物落盘后执行（after_generate 钩子早于写文件，会跳过）
+        run: npm run purge
+
       - name: Verify build output
         run: |
           if [ ! -f public/index.html ]; then
