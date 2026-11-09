@@ -10,7 +10,6 @@
     "admin": "hexo server -d",
     "audit": "node scripts/audit.js",
     "budget": "node scripts/perf-budget.js",
-    "sync:notes": "node tools/sync-obsidian.js",
     "lhci": "npx --yes @lhci/cli@0.15.1 autorun"
   },
   "hexo": {
