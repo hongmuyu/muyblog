@@ -1,22 +1,24 @@
 ---
-title: "FastAPI 详解"
+title: FastAPI 详解
 date: 2026-11-09 13:04:11
 updated: 2026-11-09 13:04:11
 categories:
   - 后端运维
 tags:
-  - "FastAPI"
-  - "Web 框架"
+  - FastAPI
+  - Web 框架
+description: ''
 toc: true
 comments: true
 ---
+
 ## FastAPI 详解
 
 ## 为什么用 FastAPI（Web 框架）
 
 用 socket 来构建 web 框架太麻烦了，要处理的请求信息繁杂，因此直接用现成的 web 框架来搭建。
 
-![Pasted image 20260328160547.png](/images/notes/FastAPI-详解/计算机网络体系结构.webp)
+![计算机网络体系结构.png](/images/notes/FastAPI-详解/计算机网络体系结构.webp)
 
 ## 前后端处理
 
@@ -32,11 +34,12 @@ RESTful 是一种专门为 Web 开发而定义 API 接口的设计风格，尤�
 - 不通过路径区分函数（`/student/add` → add、`/student/update` → update），而是在同一路径下通过请求方式实现不同功能（`/student` → add / update）
 
 ![rest方法.png](/images/notes/FastAPI-详解/rest方法.webp)
+
 ![client、server、app关系.png](/images/notes/FastAPI-详解/client、server、app关系.webp)
 
 uvicorn 是 web 服务器，接收 http 请求转换成 python 函数调用，实现路由映射：
 
-```
+```plain
 路由系统 → 逻辑函数（请求参数、响应方式）→ 数据库操作（ORM）
 ```
 
