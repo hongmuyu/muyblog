@@ -88,7 +88,7 @@ class UserAuthResponse(BaseModel):
 
 `from_attributes=True` 让 Pydantic 可以直接从 ORM 对象取值，配合 `model_validate(user)` 把数据库对象转成响应模型。
 
-![[Pasted image 20261109160316.png]]
+![Swagger 中 /api/user/register 接口的请求体示例](/images/ai-juejin-toutiao-swagger-register.png)
 
 ## 四、依赖注入：Depends
 
