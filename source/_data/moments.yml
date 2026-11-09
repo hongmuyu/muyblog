@@ -5,3 +5,8 @@ items:
   - date: 2026-11-06 17:09
     content: 期末考试怎么这么晚这么多门！！！
     mood: 坏
+  - date: 2026-11-09 15:34
+    content: |-
+      网页倍速播放:
+      document.querySelector("video").playbackRate=x.x
+    mood: ''
