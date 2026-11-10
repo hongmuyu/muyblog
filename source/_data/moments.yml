@@ -10,3 +10,6 @@ items:
       网页倍速播放:
       document.querySelector("video").playbackRate=x.x
     mood: ''
+  - date: 2026-11-10 21:40
+    content: 今天上午10.面了一场试，不知道结果咋样，挺突然的，之前写好简历竟然约面了，原本想着12月完善简历之后再接着投的，顺其自然吧
+    mood: 淡淡的
